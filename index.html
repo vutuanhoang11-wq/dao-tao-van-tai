@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Đào tạo an toàn nhà thầu vận tải</title>
+<style>
+:root{
+  --pri:#0b5cad; --pri-d:#073f78; --ok:#1a8f4a; --bad:#c62828; --warn:#f5a400;
+  --bg:#eef2f7; --card:#fff; --tx:#1b2430; --mut:#5d6b7a; --line:#d6dde6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--tx);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+header{background:var(--pri);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header .logo{width:34px;height:34px;border-radius:8px;background:#fff;color:var(--pri);font-weight:800;display:grid;place-items:center;font-size:13px}
+header h1{font-size:15px;font-weight:600;line-height:1.25}
+header small{display:block;font-weight:400;opacity:.85;font-size:12px}
+.steps{display:flex;gap:4px;padding:10px 16px 0}
+.steps i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.steps i.on{background:var(--pri)}
+main{max-width:560px;margin:0 auto;padding:14px 16px 100px}
+.screen{display:none}
+.screen.show{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.card{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:14px}
+h2{font-size:20px;margin-bottom:6px}
+h3{font-size:16px;margin:10px 0 6px}
+p.mut{color:var(--mut);font-size:14px}
+label{display:block;font-size:14px;font-weight:600;margin:12px 0 4px}
+label b{color:var(--bad)}
+input[type=text],input[type=tel],input[type=date]{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;background:#fff;color:var(--tx)}
+select{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;background:#fff;color:var(--tx);appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px;background-repeat:no-repeat}
+select.err{border-color:var(--bad)}
+input.upper{text-transform:uppercase}
+/* Sửa ô ngày tràn viền trên iPhone/Android */
+input[type=date]{display:block;-webkit-appearance:none;appearance:none;min-width:0;max-width:100%;width:100%;min-height:50px;line-height:24px}
+input[type=date]::-webkit-date-and-time-value{text-align:left;margin:0}
+input[type=date]::-webkit-calendar-picker-indicator{margin-left:auto}
+input:focus,select:focus{outline:none;border-color:var(--pri)}
+
+input.err{border-color:var(--bad)}
+.errmsg{color:var(--bad);font-size:13px;min-height:0}
+.photo-wrap{display:flex;gap:14px;align-items:center}
+.photo-box{width:108px;height:135px;flex:none;border:2px dashed #9fb3c8;border-radius:10px;display:grid;place-items:center;text-align:center;color:var(--mut);font-size:14px;cursor:pointer;background:#f7f9fc;overflow:hidden}
+.photo-box img{width:100%;height:100%;object-fit:contain;background:#fff}
+.photo-box.err{border-color:var(--bad)}
+.photo-tip{font-size:13px;color:var(--mut)}
+.inapp{background:#fff6e0;border:1px solid var(--warn);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.inapp[hidden]{display:none}
+.sendbox{border:2px solid var(--warn);background:#fffaf0}
+.sendbox[hidden]{display:none}
+.sendsteps{padding-left:20px;margin:8px 0 4px;font-size:15px}
+.sendsteps li{margin:3px 0}
+.cert .unsent{margin-top:10px;background:rgba(0,0,0,.25);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;text-align:center}
+.cert .person{display:flex;gap:14px;align-items:center}
+.cert .avatar{width:84px;height:auto;max-height:130px;flex:none;border-radius:10px;border:3px solid #fff;background:#fff;display:block}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;background:var(--pri);color:#fff;margin-top:14px}
+.btn:disabled{background:#9fb3c8;cursor:not-allowed}
+.btn.sec{background:#fff;color:var(--pri);border:1.5px solid var(--pri)}
+.btn.ok{background:var(--ok)}
+.row{display:flex;gap:10px}
+.row .btn{flex:1}
+ul.list{padding-left:20px;margin:6px 0}
+ul.list li{margin:4px 0}
+
+/* Slides – nội dung đào tạo 28 trang (đặt trong #s-slides) */
+#s-slides{
+  --ink:#26272b; --ink-2:#3a3b40; --orange:#f47b20; --orange-d:#c85a0c;
+  --red:#d62828; --green:#1f9d55; --blue:#1d5fae;
+  --paper:#ffffff; --mist:#f3f4f6; --tx:#1f2024; --mut:#6b6f78; --line:#e3e5ea;
+  --font:"Be Vietnam Pro",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+#s-slides .app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto;background:var(--paper)}
+#s-slides .top{background:var(--ink);color:#fff;padding:6px 14px 5px;padding-top:max(6px,env(safe-area-inset-top));display:flex;align-items:center;gap:8px}
+#s-slides .top .logo{width:24px;height:24px;border-radius:6px;background:var(--orange);color:#fff;font-weight:800;font-size:10.5px;display:grid;place-items:center;flex:none}
+#s-slides .top .tt{flex:1;min-width:0}
+#s-slides .top b{font-size:15px;font-weight:600}
+#s-slides .top small{display:none}
+#s-slides .top .cnt{font-size:15px;font-weight:700;color:var(--orange);font-variant-numeric:tabular-nums}
+#s-slides .prog{height:4px;background:var(--ink-2)}
+#s-slides .prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+#s-slides .stage{flex:1;position:relative;overflow:hidden;touch-action:pan-y}
+#s-slides .track{display:flex;height:100%;transition:transform .55s cubic-bezier(.22,.8,.24,1)}
+#s-slides .slide{min-width:100%;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative}
+#s-slides .head{background:var(--ink);color:#fff;padding:8px 16px 12px;display:flex;gap:12px;align-items:flex-end}
+#s-slides .head .t{flex:1;min-width:0}
+#s-slides .eyebrow{color:var(--orange);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+#s-slides .head h2{font-size:20px;line-height:1.25;font-weight:700;margin-top:2px;text-wrap:balance}
+#s-slides .head img{width:32px;height:32px;flex:none}
+#s-slides .body{padding:14px 16px 24px;display:flex;flex-direction:column;gap:13px}
+#s-slides h3{font-size:17px;font-weight:700;color:var(--orange-d);letter-spacing:.01em}
+#s-slides p.s{font-size:16.5px;color:var(--mut)}
+#s-slides .hl{background:linear-gradient(transparent 58%,rgba(244,123,32,.35) 58%) no-repeat 0 0/0% 100%;padding:0 2px;font-weight:700;color:inherit}
+#s-slides .slide.on .hl{animation:hl .7s ease forwards;animation-delay:var(--hd,1.5s)}
+#s-slides .slide.done .hl{background-size:100% 100%;animation:none}
+@keyframes hl{to{background-size:100% 100%}}
+#s-slides .nw{white-space:nowrap}
+#s-slides .rv{opacity:0;transform:translateY(14px)}
+#s-slides .slide.on .rv{animation:up .5s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:var(--d,0s)}
+#s-slides .pop{opacity:0;transform:scale(.4)}
+#s-slides .slide.on .pop{animation:pop .55s cubic-bezier(.3,1.6,.5,1) forwards;animation-delay:var(--d,0s)}
+#s-slides .slide.on .shake{animation:pop .55s cubic-bezier(.3,1.6,.5,1) var(--d,0s) forwards,shake .5s ease var(--sd,1s) 1}
+#s-slides .slide.on .pulse{animation:up .5s cubic-bezier(.2,.8,.3,1) var(--d,0s) forwards,pulse 1.4s ease-in-out calc(var(--d,0s) + .6s) 3}
+#s-slides .slide.done .rv,#s-slides .slide.done .pop{opacity:1;transform:none;animation:none}
+@keyframes up{to{opacity:1;transform:none}}
+@keyframes pop{to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{rotate:0deg}20%{rotate:-9deg}40%{rotate:8deg}60%{rotate:-6deg}80%{rotate:4deg}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(214,40,40,.0)}50%{box-shadow:0 0 0 6px rgba(214,40,40,.25)}}
+#s-slides .cover{background:var(--ink);color:#fff;min-height:100%;display:flex;flex-direction:column}
+#s-slides .cover .pic{position:relative;overflow:hidden;aspect-ratio:3/2}
+#s-slides .cover .pic img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.12)}
+#s-slides .slide.on .cover .pic img{animation:kb 7s ease-out forwards}
+#s-slides .slide.done .cover .pic img{transform:none;animation:none}
+@keyframes kb{to{transform:scale(1)}}
+#s-slides .cover .pic::after{content:"";position:absolute;inset:auto 0 0;height:45%;background:linear-gradient(transparent,var(--ink))}
+#s-slides .cover .txt{padding:6px 22px 28px;display:flex;flex-direction:column;gap:14px;flex:1}
+#s-slides .cover h1{font-size:36px;line-height:1.12;font-weight:800}
+#s-slides .cover h1 span{display:block}
+#s-slides .cover h1 em{font-style:normal;color:var(--orange)}
+#s-slides .cover p{opacity:.85;font-size:17.5px}
+#s-slides .cover .by{margin-top:auto;font-size:13.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+#s-slides .toc{display:flex;flex-direction:column;gap:8px}
+#s-slides .toc .it{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:12px;background:var(--mist)}
+#s-slides .toc .it b{color:var(--orange);font-size:20px;font-weight:800;width:28px;font-variant-numeric:tabular-nums}
+#s-slides .toc .it img{width:30px;height:30px;flex:none}
+#s-slides .toc .it span{font-weight:600;font-size:17.5px}
+#s-slides .divider{background:var(--ink);color:#fff;min-height:100%;padding:28px 24px 26px;display:flex;flex-direction:column;gap:14px}
+#s-slides .divider .eye{font-size:13.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+#s-slides .divider .mid{margin:auto 0;display:flex;flex-direction:column;gap:12px}
+#s-slides .divider .drow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#s-slides .divider .num{font-size:96px;line-height:1;font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums}
+#s-slides .divider .ic{width:84px;height:84px}
+#s-slides .divider .part{color:var(--orange);font-weight:700;font-size:15px;letter-spacing:.08em}
+#s-slides .divider h2{font-size:30px;line-height:1.2;font-weight:700}
+#s-slides .divider p{opacity:.85;font-size:17.5px}
+#s-slides .divider .by{font-size:13.5px;letter-spacing:.08em;opacity:.6}
+#s-slides .wear{display:flex;gap:14px;align-items:center;background:var(--mist);border-radius:14px;padding:10px 14px 10px 6px}
+#s-slides .wear img{width:96px;height:auto;flex:none}
+#s-slides .wear ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+#s-slides .wear li{display:flex;gap:10px;align-items:center;font-weight:600;font-size:17.5px}
+#s-slides .ok{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none;font-size:17px}
+#s-slides .list{display:flex;flex-direction:column;gap:10px}
+#s-slides .row{display:flex;gap:12px;align-items:center;padding:8px 10px;border-radius:12px;border:1.5px solid var(--line)}
+#s-slides .row > img{width:60px;height:60px;object-fit:contain;flex:none;border-radius:8px;background:#fff}
+#s-slides .row > span,#s-slides .row > div{font-size:17px;min-width:0}
+#s-slides .row.hot{border-color:rgba(214,40,40,.5);background:#fff5f5}
+#s-slides .row.ph > img{width:76px;height:64px;object-fit:cover;border-radius:10px}
+#s-slides .row.ph.wide > img{width:118px;height:79px}
+#s-slides .row .k{display:block;font-weight:700;color:var(--orange-d);font-size:17px}
+#s-slides .hero{border-radius:14px;overflow:hidden;background:#f5f6f8}
+#s-slides .hero img{width:100%;display:block}
+#s-slides .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#s-slides .cell{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:var(--mist);min-width:0}
+#s-slides .cell img{width:44px;height:44px;object-fit:contain;flex:none;background:#fff;border-radius:8px}
+#s-slides .cell span{font-size:16.5px;font-weight:600;line-height:1.3;min-width:0}
+#s-slides .note{background:#fff4ea;border-radius:12px;padding:12px 14px;font-size:16.5px;display:flex;flex-direction:column;gap:6px}
+#s-slides .note b{color:var(--orange-d)}
+#s-slides .warn{background:#fdecec;color:#8f1414;border-radius:12px;padding:12px 14px;font-size:17px;font-weight:700;display:flex;gap:10px;align-items:center}
+#s-slides .warn img{width:28px;height:28px;flex:none}
+#s-slides .dark{background:var(--ink);color:#fff;border-radius:12px;padding:12px 14px;font-size:17px;font-weight:700;display:flex;gap:10px;align-items:center}
+#s-slides .dark img{width:28px;height:28px;flex:none}
+#s-slides .dark em{font-style:normal;color:var(--orange)}
+#s-slides .ladder{border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+#s-slides .ladder.light{background:#fff7ec}
+#s-slides .ladder.heavy{background:#fdecec}
+#s-slides .ladder h4{font-size:17px;font-weight:800}
+#s-slides .ladder.light h4{color:var(--orange-d)}
+#s-slides .ladder.heavy h4{color:#a11b1b}
+#s-slides .steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px}
+#s-slides .steps div{background:#fff;border-radius:10px;padding:8px 6px;text-align:center;min-width:0}
+#s-slides .steps small{display:block;font-size:14px;color:var(--mut);font-weight:600}
+#s-slides .steps b{font-size:16px;line-height:1.25;display:block}
+#s-slides .steps .perm{background:var(--red);color:#fff}
+#s-slides .steps .perm small{color:#ffd6d6}
+#s-slides .ladder p{font-size:15.5px;color:#4a4d55}
+#s-slides .cond{display:flex;gap:12px;align-items:center}
+#s-slides .cond .n{width:30px;height:30px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;display:grid;place-items:center;flex:none}
+#s-slides .cond span{font-weight:600;font-size:17px;flex:1;min-width:0}
+#s-slides .cond img{width:64px;height:52px;object-fit:contain;flex:none}
+#s-slides .cards3{display:grid;grid-template-columns:1fr;gap:10px}
+#s-slides .cardx{border-radius:12px;padding:10px;display:grid;grid-template-columns:64px 1fr;grid-template-rows:auto auto 1fr;column-gap:12px;row-gap:3px;min-width:0;align-items:start}
+#s-slides .cardx img{width:64px;border-radius:6px;display:block;grid-row:1/4}
+#s-slides .cardx .tag{justify-self:start}
+#s-slides .cardx .tag{font-size:13px;font-weight:800;color:#fff;border-radius:20px;padding:3px 6px;text-align:center;letter-spacing:.02em}
+#s-slides .cardx b{font-size:16px;line-height:1.25}
+#s-slides .cardx p{font-size:15px;line-height:1.35;color:#4a4d55}
+#s-slides .c-blue{background:#e8f0fb}
+#s-slides .c-blue .tag{background:var(--blue)}
+#s-slides .c-blue b{color:var(--blue)}
+#s-slides .c-or{background:#fff1e4}
+#s-slides .c-or .tag{background:#e07b00}
+#s-slides .c-or b{color:#b25d00}
+#s-slides .c-red{background:#fdeaea}
+#s-slides .c-red .tag{background:var(--red)}
+#s-slides .c-red b{color:var(--red)}
+#s-slides .gate{border-radius:14px;border:1.5px solid var(--line);overflow:hidden}
+#s-slides .gate .gh{background:var(--orange);color:#fff;font-weight:800;padding:8px 14px;font-size:17px}
+#s-slides .gate .gb{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;padding:10px 14px;font-size:16.5px}
+#s-slides .gate .gb span{color:var(--mut)}
+#s-slides .gate .gb b{font-variant-numeric:tabular-nums}
+#s-slides .tbl{width:100%;border-collapse:collapse;font-size:16.5px}
+#s-slides .tbl th{background:var(--ink);color:#fff;text-align:left;padding:8px 10px;font-weight:600;font-size:15.5px}
+#s-slides .tbl td{padding:8px 10px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+#s-slides .tbl tr:nth-child(even) td{background:var(--mist)}
+#s-slides .map{border-radius:12px;overflow:hidden;border:1.5px solid var(--line);position:relative;cursor:zoom-in}
+#s-slides .map img{width:100%;display:block}
+#s-slides .map .zoom{position:absolute;right:8px;bottom:8px;background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;padding:4px 10px;border-radius:20px}
+#s-slides .legend{display:grid;grid-template-columns:1fr;gap:8px 12px;font-size:15.5px}
+#s-slides .legend div{display:flex;gap:8px;align-items:center;min-width:0}
+#s-slides .legend i{width:26px;height:20px;flex:none;border-radius:3px;display:block}
+#s-slides .legend img{width:26px;height:26px;flex:none;object-fit:contain}
+#s-slides .sw-b{background:#FFF3E8;border:1.5px solid #E8853A}
+#s-slides .sw-r{border:2px solid #B71C1C;background:#FDECEC}
+#s-slides .sw-g{background:linear-gradient(90deg,transparent 0,transparent 0) ,#5FA83F;height:6px!important;border-radius:3px}
+#s-slides .tl{display:flex;flex-direction:column;gap:12px}
+#s-slides .tl .lane{display:flex;flex-direction:column;gap:4px}
+#s-slides .tl .lane b{font-size:15.5px}
+#s-slides .tl .bar{position:relative;height:16px;background:var(--mist);border-radius:8px;overflow:hidden}
+#s-slides .tl .bar i{position:absolute;top:0;bottom:0;background:var(--orange);border-radius:4px;transform:scaleX(0);transform-origin:left}
+#s-slides .slide.on .tl .bar i{animation:grow .7s ease forwards;animation-delay:var(--d,1s)}
+#s-slides .slide.done .tl .bar i{transform:none;animation:none}
+@keyframes grow{to{transform:scaleX(1)}}
+#s-slides .tl .ax{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums}
+#s-slides .speed{background:var(--ink);color:#fff;border-radius:16px;padding:16px;display:flex;align-items:center;gap:16px}
+#s-slides .sign{width:104px;height:104px;border-radius:50%;background:#fff;border:11px solid var(--red);display:grid;place-items:center;flex:none;color:#111;font-size:44px;font-weight:800;font-variant-numeric:tabular-nums}
+#s-slides .speed b{font-size:22px;display:block}
+#s-slides .speed span{font-size:15.5px;opacity:.8}
+#s-slides .rule{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--mist)}
+#s-slides .rule .ci{width:42px;height:42px;border-radius:50%;background:var(--ink);display:grid;place-items:center;flex:none}
+#s-slides .rule .ci img{width:24px;height:24px;object-fit:contain}
+#s-slides .rule b{display:block;font-size:17px}
+#s-slides .rule span{font-size:16px;color:#4a4d55}
+#s-slides .flow{display:flex;flex-direction:column;gap:0;position:relative}
+#s-slides .fstep{display:grid;grid-template-columns:104px 1fr;gap:12px;align-items:center;padding:8px 0;position:relative}
+#s-slides .fstep .ph{position:relative}
+#s-slides .fstep .ph img{width:104px;height:82px;object-fit:cover;border-radius:10px;display:block}
+#s-slides .fstep .ph b{position:absolute;left:-6px;top:-6px;width:26px;height:26px;border-radius:50%;background:var(--orange);color:#fff;font-size:15px;display:grid;place-items:center;border:2px solid #fff}
+#s-slides .fstep h4{font-size:17.5px;font-weight:700}
+#s-slides .fstep p{font-size:16px;color:#4a4d55}
+#s-slides .ext{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#s-slides .ext div{background:var(--mist);border-radius:12px;padding:10px;font-size:15.5px}
+#s-slides .ext b{display:block;font-size:16.5px;color:var(--red)}
+#s-slides .use{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#s-slides .use div{text-align:center;font-size:14px;font-weight:600;line-height:1.3}
+#s-slides .use img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;border-radius:10px;border:1px solid var(--line);display:block;margin-bottom:4px}
+#s-slides .bul{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:16.5px}
+#s-slides .bul li{padding-left:18px;position:relative}
+#s-slides .bul li::before{content:"";position:absolute;left:2px;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--orange)}
+#s-slides .box{border-radius:14px;background:var(--mist);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+#s-slides .box .bh{display:flex;gap:10px;align-items:center}
+#s-slides .box .bh img{width:56px;height:56px;object-fit:cover;border-radius:10px;flex:none}
+#s-slides .box ol{padding-left:20px;font-size:16.5px;display:flex;flex-direction:column;gap:4px}
+#s-slides .gal{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#s-slides .gal figure{background:var(--mist);border-radius:12px;overflow:hidden}
+#s-slides .gal figure:last-child{grid-column:1/-1}
+#s-slides .gal img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+#s-slides .gal figure:last-child img{aspect-ratio:16/9}
+#s-slides .gal figcaption{padding:8px 10px;font-size:15px}
+#s-slides .gal figcaption b{display:block;font-size:16.5px}
+#s-slides .inc .chip{display:inline-block;background:var(--orange);color:#fff;font-weight:700;font-size:15px;padding:4px 10px;border-radius:20px;font-variant-numeric:tabular-nums}
+#s-slides .inc .ph{border-radius:14px;overflow:hidden;background:#111}
+#s-slides .inc .ph img{width:100%;display:block;max-height:300px;object-fit:contain;margin:0 auto}
+#s-slides .lesson{display:flex;gap:12px;align-items:center;background:#fff4ea;border-radius:12px;padding:10px 12px}
+#s-slides .lesson img{width:64px;height:64px;object-fit:cover;border-radius:10px;flex:none;background:#fff}
+#s-slides .lesson b{color:var(--orange-d);font-size:17px}
+#s-slides .zoomer{position:fixed;inset:0;background:rgba(10,12,16,.94);z-index:60;overflow:auto;display:flex;align-items:center;justify-content:flex-start}
+#s-slides .zoomer[hidden]{display:none}
+#s-slides .zoomer img{width:180vw;max-width:none;display:block;margin:auto}
+#s-slides .zoomer button{position:fixed;top:max(12px,env(safe-area-inset-top));right:12px;background:#fff;color:var(--ink);border:none;border-radius:20px;padding:8px 14px;font:700 14px var(--font)}
+#s-slides .nav{padding:8px 14px;padding-bottom:max(8px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column;gap:6px}
+#s-slides .row2{display:flex;gap:10px}
+#s-slides .btn{flex:1;padding:11px;border:none;border-radius:12px;font:700 17px var(--font);cursor:pointer;background:var(--orange);color:#fff;position:relative;overflow:hidden}
+#s-slides .btn.sec{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+#s-slides .btn:disabled{background:#f1c7a6;color:#fff;cursor:not-allowed}
+#s-slides .btn.sec:disabled{background:#fff;color:#c4c7cd}
+#s-slides .btn .fill{position:absolute;inset:0;background:rgba(255,255,255,.28);transform-origin:left;transform:scaleX(0)}
+#s-slides .btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+#s-slides .smap{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#F3F4F6}
+#s-slides .smap .mh{background:var(--ink);color:#fff;font-weight:700;font-size:15px;text-align:center;padding:7px 10px}
+#s-slides .smap svg{display:block;width:100%;height:auto}
+#s-slides .smap .lg{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;padding:8px 10px;background:#fff;font-size:13.5px;color:#4a4d55}
+#s-slides .smap .lg span{display:flex;align-items:center;gap:6px}
+#s-slides .smap .lg i{display:inline-block;width:16px;height:12px;border-radius:2px}
+#s-slides .smap .lg i.g{width:14px;height:14px;border-radius:50%;border:2px solid #F28C28;background:#1E3A6B}
+#s-slides .smap .lg i.r{background:#FDECEC;border:2px solid #B71C1C}
+#s-slides .smap .lg i.b{background:#FFF3E8;border:1.5px solid #E8853A}
+
+/* ===== Nâng cấp hiệu ứng ===== */
+/* chuyển cảnh: trang cũ mờ + thu nhỏ nhẹ, trang mới nổi lên */
+#s-slides .slide{transition:opacity .5s ease,transform .55s cubic-bezier(.22,.8,.24,1)}
+#s-slides .slide:not(.cur){opacity:.35;transform:scale(.94)}
+/* icon tiêu đề: bật lên rồi lơ lửng nhẹ */
+#s-slides .slide.on .head img.pop,#s-slides .slide.done .head img.pop{animation:pop .55s cubic-bezier(.3,1.6,.5,1) var(--d,0s) forwards,float 3.2s ease-in-out calc(var(--d,0s) + .7s) infinite}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -4px}}
+/* icon trong các dòng nội dung: xoay nhẹ khi hiện */
+#s-slides .slide.on .row.rv > img,#s-slides .slide.on .rule.rv .ci,#s-slides .slide.on .cell.rv img,#s-slides .slide.on .lesson.rv img,#s-slides .slide.on .fstep.rv .ph img,#s-slides .slide.on .stp.rv img{animation:iconIn .6s cubic-bezier(.3,1.5,.5,1) calc(var(--d,0s) + .12s) both}
+@keyframes iconIn{from{opacity:0;transform:scale(.3) rotate(-18deg)}to{opacity:1;transform:none}}
+/* ảnh lớn: vệt sáng lướt qua một lần */
+#s-slides .hero,#s-slides .ph{position:relative;overflow:hidden}
+#s-slides .slide.on .hero::after,#s-slides .slide.on .inc .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.45) 48%,transparent 66%);transform:translateX(-120%);animation:sweep 1.1s ease .7s 1;pointer-events:none}
+@keyframes sweep{to{transform:translateX(120%)}}
+/* trang mở đầu mỗi phần */
+#s-slides .divider{position:relative;overflow:hidden}
+#s-slides .divider::before{content:attr(data-n);position:absolute;right:-14px;bottom:24px;font-size:180px;font-weight:800;line-height:1;color:rgba(255,255,255,.035);pointer-events:none}
+#s-slides .divider::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10px;background:repeating-linear-gradient(-45deg,var(--orange) 0 14px,#1f2024 14px 28px);opacity:.9}
+#s-slides .divider .icw{position:relative;width:96px;height:96px;display:grid;place-items:center;flex:none}
+#s-slides .divider .icw::before,#s-slides .divider .icw::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--orange);opacity:0}
+#s-slides .slide.on .divider .icw::before{animation:ring 2.2s ease-out .8s infinite}
+#s-slides .slide.on .divider .icw::after{animation:ring 2.2s ease-out 1.9s infinite}
+@keyframes ring{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.45);opacity:0}}
+#s-slides .divider .topics{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+#s-slides .divider .topics .tp{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 12px;font-size:16px;font-weight:600}
+#s-slides .divider .topics .tp i{width:24px;height:24px;border-radius:50%;background:var(--orange);color:#fff;font-style:normal;font-size:13px;font-weight:800;display:grid;place-items:center;flex:none}
+#s-slides .divider .tk{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-top:4px}
+/* nút bấm: nhún khi chạm */
+#s-slides .btn:active:not(:disabled){transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){#s-slides .slide{transition:none}#s-slides .slide:not(.cur){opacity:1;transform:none}
+  #s-slides .slide.on .head img.pop{animation:none}#s-slides .slide.on .hero::after,#s-slides .slide.on .inc .ph::after,#s-slides .slide.on .divider .icw::before,#s-slides .slide.on .divider .icw::after{animation:none}}
+#s-slides .slide.cur .smap .rz{animation:rzb 1.3s ease-in-out infinite}
+@keyframes rzb{0%,100%{fill:#FDECEC;stroke:#B71C1C}50%{fill:#F26B6B;stroke:#8E0E0E}}
+#s-slides .slide.cur .smap .lg i.r,#s-slides .slide.cur .sw-r{animation:rzc 1.3s ease-in-out infinite}
+@keyframes rzc{0%,100%{background:#FDECEC}50%{background:#F26B6B}}
+@media (prefers-reduced-motion:reduce){#s-slides .slide.cur .smap .rz,#s-slides .slide.cur .smap .lg i.r,#s-slides .slide.cur .sw-r{animation:none}}
+#s-slides .hint{display:none}
+#s-slides .more{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:5;border:none;border-radius:20px;background:var(--ink);color:#fff;font:600 14px var(--font);padding:8px 16px;box-shadow:0 4px 14px rgba(0,0,0,.25);animation:moreB 1.4s ease-in-out infinite;cursor:pointer}
+@keyframes moreB{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-5px)}}
+@media (prefers-reduced-motion:reduce){#s-slides .more{animation:none}}
+#s-slides .review{display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;color:var(--mut)}
+#s-slides .review input{accent-color:var(--orange);width:16px;height:16px}
+@media (prefers-reduced-motion:reduce){#s-slides .track{transition:none}
+#s-slides .rv,#s-slides .pop{opacity:1!important;transform:none!important;animation:none!important}
+#s-slides .slide.on .hl{animation:none;background-size:100% 100%}
+#s-slides .slide.on .cover .pic img,#s-slides .slide.on .tl .bar i{animation:none;transform:none}}
+#s-slides.show{display:block;position:fixed;inset:0;z-index:30;background:var(--paper);animation:none}
+#s-slides .app{height:100%;font-family:var(--font);font-size:17px;line-height:1.5;color:var(--tx)}
+#s-slides img{max-width:100%}
+#s-slides .slide{padding:0;min-height:0}
+body.lock{overflow:hidden}
+
+
+/* Quiz */
+.q{margin-bottom:6px}
+.q .qt{font-weight:700;margin-bottom:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1.5px solid var(--line);border-radius:10px;margin:7px 0;cursor:pointer;font-size:15px}
+.opt input{margin-top:4px;transform:scale(1.2)}
+.opt.sel{border-color:var(--pri);background:#eef5fd}
+.qnav{font-size:14px;color:var(--mut);text-align:center;margin-top:6px}
+.score{font-size:46px;font-weight:800;text-align:center}
+.score.ok{color:var(--ok)} .score.bad{color:var(--bad)}
+.review{font-size:14px;margin-top:8px}
+.review div{padding:8px 0;border-top:1px solid var(--line)}
+.review .x{color:var(--bad)}
+
+/* Commitment & signature */
+.commit{max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14.5px;background:#fbfcfe}
+.commit ol{padding-left:20px}
+.commit li{margin:6px 0}
+.chk{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:15px;font-weight:600}
+.chk input{transform:scale(1.4);margin-top:5px}
+.sigwrap{position:relative;border:2px dashed #9fb3c8;border-radius:10px;background:#fff;margin-top:8px}
+#sig{display:block;width:100%;height:170px;touch-action:none}
+.sigwrap .ph{position:absolute;inset:0;display:grid;place-items:center;color:#a9b6c4;pointer-events:none;font-size:15px}
+.link{background:none;border:none;color:var(--pri);font-weight:600;font-size:14px;cursor:pointer;padding:6px 0}
+
+/* Certificate */
+.cert{position:relative;border-radius:18px;overflow:hidden;color:#fff;background:linear-gradient(135deg,#0b5cad,#063a6e);box-shadow:0 6px 18px rgba(6,58,110,.35)}
+.cert.expiring{background:linear-gradient(135deg,#e07b00,#a34f00)}
+.cert.expired{background:linear-gradient(135deg,#c62828,#7f1414)}
+.cert.expiring .code{color:#a34f00}
+.cert.expired .code{color:#7f1414}
+.cert .warn{margin-top:12px;background:rgba(0,0,0,.22);border-radius:8px;padding:8px 10px;font-size:14px;font-weight:600;text-align:center}
+.cert .shine{position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.22) 45%,transparent 60%);animation:shine 3s linear infinite;pointer-events:none}
+@keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.cert .top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(0,0,0,.18)}
+.cert .top b{font-size:13px;letter-spacing:.5px}
+.cert .badge{background:var(--ok);color:#fff;font-weight:800;font-size:13px;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px}
+.cert .badge .pulse{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.2}}
+.cert.expiring .badge{background:#fff;color:#a34f00}
+.cert.expiring .badge .pulse{background:#e07b00}
+.cert.expired .badge{background:#fff;color:var(--bad)}
+.cert.expired .badge .pulse{background:var(--bad)}
+.cert .body{padding:16px}
+.cert .name{font-size:22px;font-weight:800;line-height:1.2}
+.cert .grid{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin-top:10px;font-size:14px}
+.cert .grid span:nth-child(odd){opacity:.75}
+.cert .code{margin-top:14px;background:#fff;color:var(--pri-d);border-radius:10px;padding:10px;text-align:center;font-family:Consolas,monospace;font-size:22px;font-weight:800;letter-spacing:2px}
+.cert .clock{text-align:center;font-family:Consolas,monospace;font-size:15px;margin-top:10px;opacity:.95}
+.cert .sigimg{background:#fff;border-radius:8px;margin-top:10px;height:56px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cert .sigimg img{height:52px}
+.hint{font-size:13px;color:var(--mut);text-align:center;margin-top:10px}
+.cam{position:fixed;inset:0;z-index:45;background:#0b1624;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;color:#fff}
+.cam[hidden]{display:none}
+.cam .sub{font-size:14px;opacity:.85;text-align:center}
+.cam .view{position:relative;width:min(80vw,300px);aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 0 0 3px #fff}
+.cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
+.cam .guide{position:absolute;left:20%;right:20%;top:12%;height:58%;border:2px dashed rgba(255,255,255,.8);border-radius:50%;pointer-events:none}
+.cam .row{display:flex;gap:12px;width:min(80vw,300px)}
+.cam .row button{flex:1;padding:13px;border-radius:12px;border:1.5px solid #fff;background:transparent;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.cam .row button.shot{background:#fff;color:var(--pri-d)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .3s;z-index:50;max-width:90%;text-align:center}
+.toast.on{opacity:.95}
+.demo{background:#fff6e0;border:1px solid var(--warn);border-radius:10px;padding:10px 12px;font-size:13px;margin-top:10px}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <div class="logo">EHS</div>
+  <h1><span id="hdTitle">Đào tạo an toàn nhà thầu vận tải</span><small id="hdCo">WANEK</small></h1>
+</header>
+<div class="steps" id="steps"><i></i><i></i><i></i><i></i><i></i></div>
+
+<main>
+
+<!-- 0. Chào mừng -->
+<section class="screen show" id="s-welcome">
+  <div class="card">
+    <div class="inapp" id="inappNote" hidden><b>Đang mở trong <span id="inappName">ứng dụng</span>.</b> Để chụp ảnh và lưu thẻ ổn định, nên bấm <b>⋯</b> (góc trên) → <b>Mở bằng trình duyệt</b> (Safari/Chrome).</div>
+    <h2>Chào mừng anh/chị</h2>
+    <p class="mut">Khóa đào tạo an toàn bắt buộc dành cho tài xế và nhân viên nhà thầu vận tải trước khi vào nhà máy.</p>
+    <h3>Các bước thực hiện</h3>
+    <ul class="list">
+      <li>Đăng ký thông tin cá nhân</li>
+      <li>Đọc hết nội dung đào tạo</li>
+      <li>Làm bài kiểm tra: đạt <b id="wPass"></b> câu trở lên</li>
+      <li>Tick đồng ý và ký bản cam kết</li>
+      <li>Nhận <b>thẻ chứng nhận</b>, xuất trình cho bảo vệ khi vào cổng</li>
+    </ul>
+    <p class="mut" style="margin-top:8px">Thời gian khoảng 15–20 phút. Thẻ có hiệu lực <b id="wValid"></b> tháng.</p>
+    <button class="btn" onclick="go('register')">Bắt đầu</button>
+    <button class="btn sec" id="btnMyCard" onclick="go('lookup')">Xem thẻ chứng nhận của tôi</button>
+  </div>
+</section>
+
+<!-- 1. Đăng ký -->
+<section class="screen" id="s-register">
+  <div class="card">
+    <h2>Đăng ký thông tin</h2>
+    <p class="mut">Vui lòng nhập chính xác theo CCCD.</p>
+    <label>Họ và tên <b>*</b></label>
+    <input type="text" id="f_name" class="upper" autocomplete="name" autocapitalize="characters" placeholder="VD: NGUYỄN VĂN AN" oninput="toUpper(this)">
+    <div class="errmsg" id="e_name"></div>
+    <label>Số CCCD <b>*</b></label>
+    <input type="tel" id="f_cccd" inputmode="numeric" maxlength="12" placeholder="12 chữ số">
+    <div class="errmsg" id="e_cccd"></div>
+    <label>Ngày tháng năm sinh <b>*</b></label>
+    <input type="date" id="f_dob">
+    <div class="errmsg" id="e_dob"></div>
+    <label>Đơn vị vận tải <b>*</b></label>
+    <input type="text" id="f_unit" class="upper" autocapitalize="characters" placeholder="TÊN CÔNG TY / NHÀ XE" oninput="toUpper(this)">
+    <div class="errmsg" id="e_unit"></div>
+    <label>Chức vụ <b>*</b></label>
+    <select id="f_pos">
+      <option value="">-- Chọn chức vụ --</option>
+      <option>Tài xế</option><option>Phụ lái</option><option>Điều độ</option>
+    </select>
+    <div class="errmsg" id="e_pos"></div>
+    <label>Số điện thoại <b>*</b></label>
+    <input type="tel" id="f_phone" inputmode="numeric" maxlength="10" placeholder="VD: 0912345678">
+    <div class="errmsg" id="e_phone"></div>
+    <label>Ảnh chân dung <b>*</b></label>
+    <div class="photo-wrap">
+      <div class="photo-box" id="photoBox" onclick="openCamera()"><span>📷<br>Chụp ảnh</span></div>
+      <div class="photo-tip">Nhìn thẳng, không đeo kính râm, khẩu trang, mũ.<br>Đủ sáng, rõ mặt.<br><button type="button" class="link" id="btnRetake" style="display:none" onclick="openCamera()">↺ Chụp lại</button><br><button type="button" class="link" id="btnFlip" style="display:none" onclick="flipPhoto()">⇋ Lật ảnh trái–phải</button></div>
+    </div>
+    <input type="file" id="f_photo" accept="image/*" capture="user" style="display:none" onchange="onPhoto(this)">
+    <div class="errmsg" id="e_photo"></div>
+    <label class="chk" style="font-weight:400;font-size:13.5px"><input type="checkbox" id="f_consent"> <span>Tôi đồng ý đăng ký ảnh chân dung và các thông tin trên để phục vụ mục đích đào tạo an toàn, quản lý ra vào của công ty Wanek.</span></label>
+    <div class="errmsg" id="e_consent"></div>
+    <button class="btn" onclick="submitRegister()">Tiếp tục</button>
+  </div>
+</section>
+
+<!-- 2. Slide -->
+<section class="screen" id="s-slides">
+<div class="app">
+  <div class="top"><div class="logo">EHS</div><div class="tt"><b>Đào tạo an toàn vận tải</b><small>WANEK · Bộ phận EHS</small></div><div class="cnt" id="sCnt"></div></div>
+  <div class="prog"><i id="sProg"></i></div>
+  <div class="stage" id="sStage"><div class="track" id="sTrack">
+
+<!-- 1 · BÌA -->
+<section class="slide" data-min="6">
+  <div class="cover">
+    <div class="pic"><img data-src="img/s1_1.webp" alt="Tài xế và phụ lái mặc áo phản quang đứng cạnh xe container"></div>
+    <div class="txt">
+      <div class="eyebrow rv">Hướng dẫn an toàn</div>
+      <h1><span class="rv">AN TOÀN</span><span class="rv">CHO <em>TÀI XẾ</em></span><span class="rv">VÀ <em>PHỤ LÁI</em></span></h1>
+      <p class="rv">Quy định khi làm việc tại nhà máy Wanek</p>
+      <div class="by rv">Bộ phận EHS</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · NỘI DUNG -->
+<section class="slide" data-min="8">
+  <div class="head"><div class="t"><div class="eyebrow rv">Nội dung</div><h2 class="rv">8 nhóm quy định cần nắm</h2></div></div>
+  <div class="body">
+    <div class="toc">
+      <div class="it rv"><b>01</b><img class="pop" data-src="img/s2_1.webp" alt=""><span>Quy định chung</span></div>
+      <div class="it rv"><b>02</b><img class="pop" data-src="img/s2_2.webp" alt=""><span>Quy định ra vào cổng</span></div>
+      <div class="it rv"><b>03</b><img class="pop" data-src="img/s2_4.webp" alt=""><span>Quy định giờ hoạt động</span></div>
+      <div class="it rv"><b>04</b><img class="pop" data-src="img/s2_8.webp" alt=""><span>Quy định di chuyển</span></div>
+      <div class="it rv"><b>05</b><img class="pop" data-src="img/s2_3.webp" alt=""><span>Quy định đỗ xe</span></div>
+      <div class="it rv"><b>06</b><img class="pop" data-src="img/s2_5.webp" alt=""><span>Quy định PCCC</span></div>
+      <div class="it rv"><b>07</b><img class="pop" data-src="img/s2_6.webp" alt=""><span>Ứng phó, xử lý sự cố</span></div>
+      <div class="it rv"><b>08</b><img class="pop" data-src="img/s2_7.webp" alt=""><span>Tham khảo các sự cố</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · PHẦN 1 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">01</div><span class="icw pop"><img class="ic" data-src="img/s2_1.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 1 / 8</div>
+      <h2 class="rv">Quy định chung</h2>
+      <p class="rv">Trang phục, kiểm tra phương tiện và trách nhiệm tuân thủ</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 4 · TRANG PHỤC VÀ HÀNH VI -->
+<section class="slide" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">01 · Quy định chung</div><h2 class="rv">Trang phục và hành vi</h2></div><img class="pop" data-src="img/s2_1.webp" alt=""></div>
+  <div class="body">
+    <h3 class="rv">Trang phục bắt buộc</h3>
+    <div class="wear rv">
+      <img data-src="img/s4_1.webp" alt="Công nhân mặc áo phản quang, giày bảo hộ">
+      <ul>
+        <li class="rv"><span class="ok pop">✓</span>Áo phản quang</li>
+        <li class="rv"><span class="ok pop">✓</span>Giày bít mũi, bít gót</li>
+      </ul>
+    </div>
+    <h3 class="rv">Không được phép</h3>
+    <div class="list">
+      <div class="row rv"><img class="shake" data-src="img/s4_2.webp" alt=""><span>Áo không tay, quần ngắn, dép lê hoặc dép quai.</span></div>
+      <div class="row hot rv"><img class="shake" data-src="img/s4_3.webp" alt=""><span><mark class="hl">Rượu bia, ma túy</mark>, chất kích thích.</span></div>
+      <div class="row hot rv"><img class="shake" data-src="img/s4_4.webp" alt=""><span><mark class="hl">Hút thuốc</mark> trong khuôn viên nhà máy.</span></div>
+      <div class="row rv"><img class="shake" data-src="img/s4_5.webp" alt=""><span>Tranh cãi, nói tục, khạc nhổ bừa bãi.</span></div>
+      <div class="row hot rv"><img class="shake" data-src="img/s4_6.webp" alt=""><span><mark class="hl">Nằm, ngồi hoặc ngủ dưới gầm xe.</mark></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · KIỂM TRA PHƯƠNG TIỆN -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">01 · Quy định chung</div><h2 class="rv">Kiểm tra phương tiện trước khi vận hành</h2></div><img class="pop" data-src="img/s2_1.webp" alt=""></div>
+  <div class="body">
+    <div class="hero rv"><img data-src="img/s5_1.webp" alt="Đầu kéo kéo container"></div>
+    <h3 class="rv">Đầu kéo</h3>
+    <div class="grid">
+      <div class="cell rv"><img class="pop" data-src="img/s5_2.webp" alt=""><span>Đèn xe</span></div>
+      <div class="cell rv"><img class="pop" data-src="img/s5_3.webp" alt=""><span>Lốp và bánh xe</span></div>
+      <div class="cell rv"><img class="pop" data-src="img/s5_4.webp" alt=""><span>Kính, gương chiếu hậu</span></div>
+      <div class="cell rv"><img class="pop" data-src="img/s5_5.webp" alt=""><span>Hệ thống phanh</span></div>
+    </div>
+    <h3 class="rv">Rơ-moóc và container</h3>
+    <div class="grid">
+      <div class="cell rv"><img class="pop" data-src="img/s5_6.webp" alt=""><span>Khung rơ-moóc</span></div>
+      <div class="cell rv"><img class="pop" data-src="img/s5_7.webp" alt=""><span>Chân trụ</span></div>
+      <div class="cell rv"><img class="pop" data-src="img/s5_8.webp" alt=""><span>Mâm đệm</span></div>
+      <div class="cell rv"><img class="pop" data-src="img/s5_9.webp" alt=""><span>Thùng container</span></div>
+    </div>
+    <div class="note rv">
+      <b>Áp dụng bảng kiểm theo quy trình <mark class="hl nw">EHS-S-23-001</mark>.</b>
+      <span>Lưu biên bản kiểm tra và lịch sử bảo trì để cung cấp cho EHS khi xảy ra sự cố. Nếu không cung cấp, EHS ghi nhận thiết bị <b>không bảo đảm an toàn vận hành</b>.</span>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · XỬ LÝ VI PHẠM -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">01 · Quy định chung / Xử lý vi phạm</div><h2 class="rv">Mức xử lý vi phạm</h2></div><img class="pop" data-src="img/s2_1.webp" alt=""></div>
+  <div class="body">
+    <div class="warn pulse">Hút thuốc sai nơi quy định hoặc sử dụng chất kích thích: CẤM VĨNH VIỄN ngay lần đầu.</div>
+    <div class="ladder light rv">
+      <h4>Lỗi nhẹ</h4>
+      <div class="steps">
+        <div class="pop"><small>Lần 1</small><b>Nhắc nhở</b></div>
+        <div class="pop"><small>Lần 2</small><b>Cấm 7 ngày</b></div>
+        <div class="pop"><small>Lần 3</small><b>Cấm 15 ngày</b></div>
+        <div class="pop"><small>Lần 4</small><b>Cấm 30 ngày</b></div>
+        <div class="pop perm"><small>Lần 5</small><b>Vĩnh viễn</b></div>
+      </div>
+      <p>Thiếu tín hiệu đèn/còi, sai tác phong, khạc nhổ, không chêm bánh và các lỗi khác theo quy định.</p>
+    </div>
+    <div class="ladder heavy rv">
+      <h4>Lỗi nặng</h4>
+      <div class="steps">
+        <div class="pop"><small>Lần 1</small><b>Cấm 15 ngày</b></div>
+        <div class="pop"><small>Lần 2</small><b>Cấm 30 ngày</b></div>
+        <div class="pop perm"><small>Lần 3</small><b>Vĩnh viễn</b></div>
+      </div>
+      <p>Hư hỏng tài sản, gây tai nạn, vi phạm tín hiệu, không hợp tác, điều khiển xe khi không có phụ lái, quá tốc độ hoặc không cải thiện ý thức khi được nhắc nhở.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · PHẦN 2 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">02</div><span class="icw pop"><img class="ic" data-src="img/s2_2.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 2 / 8</div>
+      <h2 class="rv">Quy định ra vào cổng</h2>
+      <p class="rv">Điều kiện vào nhà máy và di chuyển an toàn</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 8 · ĐIỀU KIỆN RA VÀO -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">02 · Quy định ra vào cổng</div><h2 class="rv">Điều kiện đối với tài xế và phụ lái</h2></div><img class="pop" data-src="img/s2_2.webp" alt=""></div>
+  <div class="body">
+    <div class="cond rv"><span class="n">1</span><span>Giấy tờ cá nhân hợp lệ</span><img data-src="img/s8_2.webp" alt=""></div>
+    <div class="cond rv"><span class="n">2</span><span>Chứng nhận đào tạo an toàn định kỳ <mark class="hl">còn hạn (6 tháng)</mark></span></div>
+    <div class="cards3">
+      <div class="cardx c-blue pop"><img data-src="img/s8_3.webp" alt="Thẻ màu xanh"><span class="tag">THẺ XANH</span><b>Đạt – còn hiệu lực</b><p>Đủ điều kiện hoạt động trong công ty.</p></div>
+      <div class="cardx c-or pop"><img data-src="img/s8_4.webp" alt="Thẻ màu cam"><span class="tag">THẺ CAM</span><b>Sắp hết hạn</b><p>Còn 1 tháng trở xuống. Đào tạo lại trước ngày hết hạn để gia hạn.</p></div>
+      <div class="cardx c-red pop"><img data-src="img/s8_5.webp" alt="Thẻ màu đỏ"><span class="tag">THẺ ĐỎ</span><b>Hết hiệu lực</b><p>Không được vào cổng. Phải đào tạo lại.</p></div>
+    </div>
+    <div class="cond rv"><span class="n">3</span><span>Phối hợp với bảo vệ và nhân viên Wanek.</span><img data-src="img/s8_1.webp" alt=""></div>
+  </div>
+</section>
+
+<!-- 9 · PHẦN 3 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">03</div><span class="icw pop"><img class="ic" data-src="img/s2_4.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 3 / 8</div>
+      <h2 class="rv">Quy định giờ hoạt động</h2>
+      <p class="rv">Khung giờ hạn chế tại cổng và đường nội bộ</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 10 · GIỜ CỔNG WN3 -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">03 · Quy định giờ hoạt động</div><h2 class="rv">Khung giờ hạn chế tại cổng WN3</h2></div><img class="pop" data-src="img/s2_4.webp" alt=""></div>
+  <div class="body">
+    <div class="gate rv"><div class="gh">Cổng 1</div><div class="gb">
+      <span>Sáng</span><b>06:00–07:00</b>
+      <span>Chiều</span><b>15:45–16:15 · 17:30–18:00</b>
+      <span>Tối / đêm</span><b>19:30–20:15 · 04:15–06:00</b></div></div>
+    <div class="gate rv"><div class="gh">Cổng 2</div><div class="gb">
+      <span>Sáng</span><b>06:00–07:30</b>
+      <span>Chiều</span><b>15:45–16:15 · 17:30–18:00</b>
+      <span>Tối / đêm</span><b>19:15–20:15</b></div></div>
+    <div class="note rv"><b>Khung giờ hạn chế tại cổng được hiểu là <mark class="hl">không có hoạt động ra vào ở các cổng</mark> hoặc di chuyển phương tiện trên đường nội bộ từ Cổng 1 – 3.</b></div>
+    <div class="smap rv"><div class="mh">Sơ đồ phân luồng và vị trí bảo vệ</div><svg viewBox="0 0 480 270" role="img" aria-label="Sơ đồ phân luồng: khu vực B1 đến B4, tuyến hạn chế và 4 vị trí bảo vệ"><rect width="480" height="270" fill="#F3F4F6"/><g class="rz" fill="#FDECEC" stroke="#B71C1C" stroke-width="2.5"><rect x="148" y="28" width="307" height="22"/><rect x="430" y="28" width="25" height="228"/><rect x="230" y="56" width="24" height="200"/></g><g fill="#FFF3E8" stroke="#E8853A" stroke-width="1.5" font-family="Arial" font-size="15" font-weight="700"><rect x="38" y="56" width="76" height="200"/><rect x="148" y="56" width="76" height="200"/><rect x="262" y="56" width="160" height="78"/><rect x="262" y="176" width="160" height="80"/></g><g font-family="Arial" font-size="15" font-weight="700" fill="#1F2024" text-anchor="middle"><text x="76" y="161">B4</text><text x="186" y="161">B1</text><text x="342" y="100">B2</text><text x="342" y="221">B3</text></g><g transform="translate(44 26)"><circle r="17" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-11 13 Q0 3 11 13 Z" fill="#1E3A6B"/><circle cy="-1" r="6.5" fill="#F2C9A0"/><path d="M-8 -5 L8 -5 L6 -10 L-6 -10 Z" fill="#1E3A6B"/><rect x="-9" y="-6" width="18" height="2.5" fill="#132849"/><circle cx="13" cy="-13" r="8" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="13" y="-9.5" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="Arial">4</text></g><g transform="translate(152 26)"><circle r="17" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-11 13 Q0 3 11 13 Z" fill="#1E3A6B"/><circle cy="-1" r="6.5" fill="#F2C9A0"/><path d="M-8 -5 L8 -5 L6 -10 L-6 -10 Z" fill="#1E3A6B"/><rect x="-9" y="-6" width="18" height="2.5" fill="#132849"/><circle cx="13" cy="-13" r="8" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="13" y="-9.5" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="Arial">3</text></g><g transform="translate(236 26)"><circle r="17" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-11 13 Q0 3 11 13 Z" fill="#1E3A6B"/><circle cy="-1" r="6.5" fill="#F2C9A0"/><path d="M-8 -5 L8 -5 L6 -10 L-6 -10 Z" fill="#1E3A6B"/><rect x="-9" y="-6" width="18" height="2.5" fill="#132849"/><circle cx="13" cy="-13" r="8" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="13" y="-9.5" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="Arial">2</text></g><g transform="translate(436 26)"><circle r="17" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-11 13 Q0 3 11 13 Z" fill="#1E3A6B"/><circle cy="-1" r="6.5" fill="#F2C9A0"/><path d="M-8 -5 L8 -5 L6 -10 L-6 -10 Z" fill="#1E3A6B"/><rect x="-9" y="-6" width="18" height="2.5" fill="#132849"/><circle cx="13" cy="-13" r="8" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="13" y="-9.5" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="Arial">1</text></g></svg><div class="lg"><span><i class="g"></i>Bảo vệ (1–4)</span><span><i class="r"></i>Tuyến hạn chế</span><span><i class="b"></i>Khu vực B1–B4</span></div></div>
+    <div class="row ph wide rv"><img data-src="img/s10_1b.webp" alt="Cổng 3: xe container, rào phân luồng, xe máy nhân viên và bảo vệ điều phối"><span><b>Cổng 3: <span class="nw">06:00–07:00</span> và <span class="nw">19:15–20:15</span>.</b> <mark class="hl">Chú ý xe máy của nhân viên</mark> khi qua cổng (khu vực có rào phân luồng và điều phối từ nhân viên bảo vệ).</span></div>
+  </div>
+</section>
+
+<!-- 11 · ĐƯỜNG NỘI BỘ WN3 -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">03 · Quy định giờ hoạt động</div><h2 class="rv">Khung giờ hạn chế tại đường nội bộ WN3</h2></div><img class="pop" data-src="img/s2_4.webp" alt=""></div>
+  <div class="body">
+    <table class="tbl rv"><thead><tr><th>Buổi</th><th>Khung giờ ăn</th></tr></thead>
+      <tbody><tr><td>Trưa</td><td><b>10:45–11:30</b></td></tr><tr><td>Chiều</td><td><b>17:00–17:40</b></td></tr><tr><td>Tối</td><td><b>22:50–00:10</b></td></tr></tbody></table>
+    <p class="s rv">Trong các khung giờ trên, <mark class="hl">hạn chế phương tiện lưu thông</mark> trên đường nội bộ WN3.</p>
+    <div class="smap rv"><div class="mh">Sơ đồ WN3</div><svg viewBox="0 0 425 278" role="img" aria-label="Sơ đồ đường nội bộ WN3: xưởng B1 đến B4, đường hạn chế hoạt động, hướng di chuyển của xe, 4 cổng bảo vệ và biển cấm đi qua đường ống hút bụi"><rect width="425" height="278" fill="#F3F4F6"/><g fill="#5FA83F"><rect x="38" y="30.5" width="352" height="7"/><path d="M26 34 L42 24 L42 44 Z"/><path d="M402 34 L386 24 L386 44 Z"/></g><g fill="#5FA83F"><rect x="406.5" y="64" width="7" height="164"/><path d="M410 52 L400 68 L420 68 Z"/><path d="M410 240 L400 224 L420 224 Z"/></g><rect x="20" y="50" width="72" height="190" fill="#FFF3E8" stroke="#E8853A" stroke-width="1.5"/><rect x="96" y="50" width="24" height="190" class="rz" fill="#FDECEC" stroke="#B71C1C" stroke-width="2"/><rect x="126" y="50" width="71" height="190" fill="#FFF3E8" stroke="#E8853A" stroke-width="1.5"/><rect x="202" y="50" width="24" height="190" class="rz" fill="#FDECEC" stroke="#B71C1C" stroke-width="2"/><rect x="233" y="50" width="155" height="73" fill="#FFF3E8" stroke="#E8853A" stroke-width="1.5"/><rect x="235" y="130" width="153" height="24" class="rz" fill="#FDECEC" stroke="#B71C1C" stroke-width="2"/><rect x="233" y="161" width="155" height="79" fill="#FFF3E8" stroke="#E8853A" stroke-width="1.5"/><rect x="20" y="246" width="372" height="24" class="rz" fill="#FDECEC" stroke="#B71C1C" stroke-width="2"/><g font-family="Arial" font-size="14" font-weight="700" fill="#1F2024" text-anchor="middle"><text x="56" y="150" transform="rotate(-90 56 150)">B4</text><text x="161" y="150" transform="rotate(-90 161 150)">B1</text><text x="310" y="91">B2</text><text x="310" y="205">B3</text></g><image href="img/s11_7.webp" x="136" y="247" width="20" height="22"/><image href="img/s11_7.webp" x="255" y="247" width="20" height="22"/><g transform="translate(31 16)"><circle r="15" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-10 11.5 Q0 2.5 10 11.5 Z" fill="#1E3A6B"/><circle cy="-1" r="5.8" fill="#F2C9A0"/><path d="M-7 -4.5 L7 -4.5 L5.5 -9 L-5.5 -9 Z" fill="#1E3A6B"/><rect x="-8" y="-5.5" width="16" height="2.3" fill="#132849"/><circle cx="12" cy="-12" r="7.5" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="12" y="-8.6" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff" font-family="Arial">4</text></g><g transform="translate(125 16)"><circle r="15" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-10 11.5 Q0 2.5 10 11.5 Z" fill="#1E3A6B"/><circle cy="-1" r="5.8" fill="#F2C9A0"/><path d="M-7 -4.5 L7 -4.5 L5.5 -9 L-5.5 -9 Z" fill="#1E3A6B"/><rect x="-8" y="-5.5" width="16" height="2.3" fill="#132849"/><circle cx="12" cy="-12" r="7.5" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="12" y="-8.6" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff" font-family="Arial">3</text></g><g transform="translate(203 16)"><circle r="15" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-10 11.5 Q0 2.5 10 11.5 Z" fill="#1E3A6B"/><circle cy="-1" r="5.8" fill="#F2C9A0"/><path d="M-7 -4.5 L7 -4.5 L5.5 -9 L-5.5 -9 Z" fill="#1E3A6B"/><rect x="-8" y="-5.5" width="16" height="2.3" fill="#132849"/><circle cx="12" cy="-12" r="7.5" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="12" y="-8.6" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff" font-family="Arial">2</text></g><g transform="translate(390 16)"><circle r="15" fill="#fff" stroke="#F28C28" stroke-width="3"/><path d="M-10 11.5 Q0 2.5 10 11.5 Z" fill="#1E3A6B"/><circle cy="-1" r="5.8" fill="#F2C9A0"/><path d="M-7 -4.5 L7 -4.5 L5.5 -9 L-5.5 -9 Z" fill="#1E3A6B"/><rect x="-8" y="-5.5" width="16" height="2.3" fill="#132849"/><circle cx="12" cy="-12" r="7.5" fill="#F28C28" stroke="#fff" stroke-width="2"/><text x="12" y="-8.6" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff" font-family="Arial">1</text></g></svg></div>
+    <div class="legend">
+      <div class="rv"><img data-src="img/s11_1.webp" alt=""><span>Cổng bảo vệ (1–4)</span></div>
+      <div class="rv"><i class="sw-b"></i><span>Xưởng B1–B4</span></div>
+      <div class="rv"><i class="sw-r"></i><span>Đường hạn chế hoạt động</span></div>
+      <div class="rv"><i class="sw-g"></i><span>Hướng di chuyển của xe</span></div>
+      <div class="rv" style="grid-column:1/-1"><img data-src="img/s11_7.webp" alt=""><span>Biển cấm đi qua đường ống hút bụi</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · WN2 & WN5 -->
+<section class="slide" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">03 · Quy định giờ hoạt động</div><h2 class="rv">Khung giờ hạn chế tại WN2 và WN5</h2></div><img class="pop" data-src="img/s2_4.webp" alt=""></div>
+  <div class="body">
+    <div class="gate rv"><div class="gh">WN2 / Cổng 1</div><div class="gb">
+      <span>Sáng</span><b>06:00–07:30</b><span>Chiều</span><b>17:30–18:15</b><span>Tối / đêm</span><b>19:15–20:15</b></div></div>
+    <div class="gate rv"><div class="gh">WN5 / Cổng 2</div><div class="gb">
+      <span>Sáng</span><b>06:30–07:00</b><span>Chiều</span><b>—</b><span>Tối / đêm</span><b>—</b></div></div>
+    <h3 class="rv">Khung giờ hạn chế trong ngày</h3>
+    <div class="tl rv">
+      <div class="lane"><b>WN2 / Cổng 1</b><div class="bar">
+        <i style="left:25%;width:6.25%"></i><i style="left:72.92%;width:3.13%"></i><i style="left:80.21%;width:4.17%"></i></div></div>
+      <div class="lane"><b>WN5 / Cổng 2</b><div class="bar"><i style="left:27.08%;width:2.08%"></i></div></div>
+      <div class="ax"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · PHẦN 4 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">04</div><span class="icw pop"><img class="ic" data-src="img/s2_8.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 4 / 8</div>
+      <h2 class="rv">Quy định di chuyển</h2>
+      <p class="rv">Tốc độ, tín hiệu, phối hợp với phụ lái và điều kiện rời vị trí tải</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 14 · QUY TẮC DI CHUYỂN -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">04 · Quy định di chuyển</div><h2 class="rv">Quy tắc di chuyển trong nhà máy</h2></div><img class="pop" data-src="img/s2_8.webp" alt=""></div>
+  <div class="body">
+    <div class="speed rv"><div class="sign pop" data-count="10">10</div><div><b>km/h tối đa</b><span>Tốc độ tối đa khi di chuyển trong nhà máy.</span></div></div>
+    <div class="rule rv"><span class="ci"><img data-src="img/s14_2.webp" alt=""></span><div><b>Bật đèn ban đêm</b><span>Bật đèn khi di chuyển vào ban đêm.</span></div></div>
+    <div class="rule rv"><span class="ci"><img data-src="img/s14_3.webp" alt=""></span><div><b>Đèn, còi và xi nhan</b><span>Cảnh báo khi gần người đi bộ, lùi/rẽ, qua đường hẹp hoặc khuất tầm nhìn.</span></div></div>
+    <div class="rule rv"><span class="ci"><img data-src="img/s14_4.webp" alt=""></span><div><b>Có phụ lái hỗ trợ</b><span><mark class="hl">Bắt buộc.</mark> Không có phụ lái, không được hoạt động tại nhà máy.</span></div></div>
+    <div class="rule rv"><span class="ci"><img data-src="img/s14_5.webp" alt=""></span><div><b>Tài xế nhìn thấy phụ lái</b><span>Phụ lái đứng ở vị trí an toàn mà tài xế nhìn thấy được.</span></div></div>
+    <div class="rule rv"><span class="ci"><img data-src="img/s14_6.webp" alt=""></span><div><b>Tránh điểm mù</b><span>Không đứng trong điểm mù và không đu bám xe.</span></div></div>
+    <div class="rule rv"><span class="ci"><img data-src="img/s14_7.webp" alt=""></span><div><b>Chân trụ khi di chuyển</b><span>Dừng hẳn xe khi nâng/hạ. <mark class="hl">Thu chân trụ hoàn toàn</mark> trước khi chạy.</span></div></div>
+  </div>
+</section>
+
+<!-- 15 · RỜI VỊ TRÍ TẢI HÀNG -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">04 · Quy định di chuyển</div><h2 class="rv">Điều kiện rời vị trí tải hàng</h2></div><img class="pop" data-src="img/s2_8.webp" alt=""></div>
+  <div class="body">
+    <div class="flow">
+      <div class="fstep rv"><div class="ph"><img data-src="img/s15_2.webp" alt=""><b class="pop">1</b></div><div><h4>Kiểm tra phía sau</h4><p>Đóng cửa container, kiểm tra chốt seal, bảo đảm không có người xung quanh.</p></div></div>
+      <div class="fstep rv"><div class="ph"><img data-src="img/s15_3.webp" alt=""><b class="pop">2</b></div><div><h4>Kiểm tra kết nối</h4><p>Kết nối đầy đủ dây hơi và dây điện.</p></div></div>
+      <div class="fstep rv"><div class="ph"><img data-src="img/s15_4b.webp" alt="Chân trụ đã thu lên hoàn toàn, cách mặt đất"><b class="pop">3</b></div><div><h4>Thu chân trụ lên hoàn toàn</h4><p>Thu chân trụ hoàn toàn trước khi chạy.</p></div></div>
+      <div class="fstep rv"><div class="ph"><img data-src="img/s15_5.webp" alt=""><b class="pop">4</b></div><div><h4>Gỡ chèn bánh xe</h4><p>Gỡ thiết bị chèn bánh xe trước khi rời vị trí.</p></div></div>
+      <div class="fstep rv"><div class="ph"><img data-src="img/s15_6.webp" alt=""><b class="pop">5</b></div><div><h4>Chờ phụ lái hướng dẫn</h4><p>Chỉ di chuyển khi phụ lái cho phép.</p></div></div>
+    </div>
+    <div class="dark pulse"><img data-src="img/s15_7.webp" alt=""><span><em>KHÔNG</em> kéo container khi đang tải hàng</span></div>
+  </div>
+</section>
+
+<!-- 16 · PHẦN 5 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">05</div><span class="icw pop"><img class="ic" data-src="img/s2_3.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 5 / 8</div>
+      <h2 class="rv">Quy định đỗ xe</h2>
+      <p class="rv">Vị trí đỗ, chêm bánh</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 17 · VỊ TRÍ ĐỖ VÀ CHÊM BÁNH -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">05 · Quy định đỗ xe</div><h2 class="rv">Vị trí đỗ và chêm bánh</h2></div><img class="pop" data-src="img/s2_3.webp" alt=""></div>
+  <div class="body">
+    <div class="row ph rv"><img data-src="img/s17_1.webp" alt=""><div><span class="k">Đỗ đúng vị trí</span>Vạch vàng và không có biển cấm.</div></div>
+    <div class="row ph rv"><img data-src="img/s17_2.webp" alt=""><div><span class="k">Cài phanh tay, tắt máy</span>Khi xuống xe.</div></div>
+    <div class="hero rv"><img data-src="img/s17_5.webp" alt="Thiết bị chêm bánh xe"></div>
+    <div class="row rv"><div><span class="k">Chêm bánh xe</span>Dùng thiết bị chêm bánh xe tại vị trí đỗ, cổng bảo vệ.</div></div>
+    <div class="row ph hot rv"><img data-src="img/s17_3.webp" alt=""><div><span class="k">Kiểm tra nền trước khi hạ chân trụ</span>Nền bê tông cứng, bằng phẳng, đúng vị trí tấm thép. <mark class="hl">Tránh hố ga, nắp cống và nền sụt lún.</mark></div></div>
+  </div>
+</section>
+
+<!-- 18 · PHẦN 6 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">06</div><span class="icw pop"><img class="ic" data-src="img/s2_5.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 6 / 8</div>
+      <h2 class="rv">Quy định PCCC</h2>
+      <p class="rv">Nhận biết bình chữa cháy và lưu ý khi sử dụng</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 19 · SỬ DỤNG BÌNH CHỮA CHÁY -->
+<section class="slide" data-min="14">
+  <div class="head"><div class="t"><div class="eyebrow rv">06 · Quy định PCCC</div><h2 class="rv">Sử dụng bình chữa cháy</h2></div><img class="pop" data-src="img/s2_5.webp" alt=""></div>
+  <div class="body">
+    <div class="hero rv" style="background:#fff"><img data-src="img/s19_1.webp" alt="Bình bột ABC và bình CO2" style="max-height:220px;object-fit:contain;margin:0 auto"></div>
+    <div class="ext">
+      <div class="rv"><b>BÌNH BỘT ABC</b>Vòi nhỏ<br>Có đồng hồ đo</div>
+      <div class="rv"><b>BÌNH CO₂</b>Loa phun lớn<br>Không có đồng hồ</div>
+    </div>
+    <h3 class="rv">Chỉ sử dụng khi biết cách và bảo đảm an toàn</h3>
+    <div class="use">
+      <div class="pop"><img data-src="img/s19_2.webp" alt="">1. Rút chốt</div>
+      <div class="pop"><img data-src="img/s19_3.webp" alt="">2. Hướng vòi vào gốc lửa</div>
+      <div class="pop"><img data-src="img/s19_4.webp" alt="">3. Bóp van</div>
+      <div class="pop"><img data-src="img/s19_5.webp" alt="">4. Quét ngang gốc đám cháy</div>
+    </div>
+    <ul class="bul">
+      <li class="rv">Giữ khoảng cách <mark class="hl">1,5–4 m</mark>, đứng xuôi chiều gió.</li>
+      <li class="rv">Không tháo chốt khi vận chuyển.</li>
+      <li class="rv">Bình bột ABC: lắc trước khi rút chốt.</li>
+      <li class="rv">Bình CO₂: chú ý vị trí cầm, tránh bỏng lạnh.</li>
+    </ul>
+    <div class="warn pulse">Không hút thuốc trong khuôn viên nhà máy</div>
+  </div>
+</section>
+
+<!-- 20 · PHẦN 7 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">07</div><span class="icw pop"><img class="ic" data-src="img/s2_6.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 7 / 8</div>
+      <h2 class="rv">Ứng phó, xử lý sự cố</h2>
+      <p class="rv">Báo động, sơ tán và thông báo sự cố</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 21 · KHI CÓ CHÁY / SƠ TÁN -->
+<section class="slide" data-min="12">
+  <div class="head"><div class="t"><div class="eyebrow rv">07 · Ứng phó, xử lý sự cố</div><h2 class="rv">Khi phát hiện cháy hoặc có lệnh sơ tán</h2></div><img class="pop" data-src="img/s2_6.webp" alt=""></div>
+  <div class="body">
+    <div class="hero rv"><img data-src="img/s21_1.webp" alt="Nhấn chuông báo cháy và sơ tán theo lối thoát hiểm"></div>
+    <div class="box rv">
+      <div class="bh"><img data-src="img/s21_2.webp" alt=""><h3>Phát hiện đám cháy</h3></div>
+      <ol>
+        <li class="rv">Giữ bình tĩnh, hô <mark class="hl">“Cháy!”</mark>.</li>
+        <li class="rv">Nhấn chuông báo cháy.</li>
+        <li class="rv">Chỉ dùng bình nếu biết cách và an toàn. Nếu không, thoát ra ngoài.</li>
+      </ol>
+    </div>
+    <div class="box rv">
+      <div class="bh"><img data-src="img/s21_3.webp" alt=""><h3>Nghe chuông / lệnh sơ tán</h3></div>
+      <ol>
+        <li class="rv">Theo lối thoát hiểm đến <mark class="hl">điểm tập kết dành cho nhà thầu</mark>.</li>
+        <li class="rv">Điểm danh và thông báo.</li>
+        <li class="rv">Không xô đẩy, trốn hoặc cố gắng điều khiển xe ở vùng nguy hiểm.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 22 · ĐIỂM TẬP TRUNG -->
+<section class="slide" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">07 · Ứng phó, xử lý sự cố</div><h2 class="rv">Điểm tập trung</h2></div><img class="pop" data-src="img/s2_6.webp" alt=""></div>
+  <div class="body">
+    <div class="gal">
+      <figure class="rv"><img data-src="img/s22_1.webp" alt=""><figcaption><b>Wanek 2</b>Trước văn phòng, đối diện cột cờ.</figcaption></figure>
+      <figure class="rv"><img data-src="img/s22_2.webp" alt=""><figcaption><b>Wanek 3</b>Trước văn phòng tòa B1, gần cột cờ.</figcaption></figure>
+      <figure class="rv"><img data-src="img/s22_3.webp" alt=""><figcaption><b>Wanek 4</b>Trước văn phòng.</figcaption></figure>
+      <figure class="rv"><img data-src="img/s22_4.webp" alt=""><figcaption><b>Wanek 5</b>Đối diện khu vực văn phòng.</figcaption></figure>
+      <figure class="rv"><img data-src="img/s22_5.webp" alt=""><figcaption><b>DC2</b>Gần phòng bảo vệ, cổng vào Block 13.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- 23 · SỰ CỐ GIAO THÔNG VÀ TÀI SẢN -->
+<section class="slide" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">07 · Ứng phó, xử lý sự cố</div><h2 class="rv">Xử lý sự cố giao thông và tài sản</h2></div><img class="pop" data-src="img/s2_6.webp" alt=""></div>
+  <div class="body">
+    <div class="row ph rv"><img data-src="img/s23_1.webp" alt=""><div><span class="k">01 · Giữ nguyên hiện trường</span>Không cho xe tiếp tục di chuyển.</div></div>
+    <div class="row ph rv"><img data-src="img/s23_2.webp" alt=""><div><span class="k">02 · Thông báo ngay</span>Bộ phận <mark class="hl">Logistics, EHS và Bảo vệ</mark>.</div></div>
+    <div class="row ph rv"><img data-src="img/s23_3.webp" alt=""><div><span class="k">03 · Lập biên bản</span>Ghi nhận sự việc.</div></div>
+    <div class="warn rv">Tài xế chịu trách nhiệm bồi thường thiệt hại tài sản theo nội dung quy định.</div>
+  </div>
+</section>
+
+<!-- 24 · PHẦN 8 -->
+<section class="slide" data-min="4">
+  <div class="divider">
+    <div class="eye rv">Hướng dẫn an toàn vận tải</div>
+    <div class="mid">
+      <div class="drow"><div class="num rv">08</div><span class="icw pop"><img class="ic" data-src="img/s2_7.webp" alt=""></span></div>
+      <div class="part rv">PHẦN 8 / 8</div>
+      <h2 class="rv">Tham khảo các sự cố</h2>
+      <p class="rv">Tình huống thực tế và bài học phòng ngừa</p>
+    </div>
+    <div class="by rv">BỘ PHẬN EHS</div>
+  </div>
+</section>
+
+<!-- 25 · DC1 -->
+<section class="slide inc" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">DC1: chân trụ sụt trên nắp cống</h2></div><img class="pop" data-src="img/s2_7.webp" alt=""></div>
+  <div class="body">
+    <div class="ph rv" style="background:#fff"><img data-src="img/s25_1.webp" alt="Vị trí chân trụ trên nắp cống"></div>
+    <div class="rv"><span class="chip">01/06/2023 · Cửa 610</span></div>
+    <p class="rv">Container nghiêng sau khi tách đầu kéo khoảng 1 phút. Không có người bị thương.</p>
+    <div class="rv"><h3>Nguyên nhân ban đầu</h3><p>Chân trụ đặt trực tiếp trên nắp cống.</p></div>
+    <div class="lesson rv"><img data-src="img/s25_2.webp" alt=""><b>Bài học: kiểm tra nền đỗ và vị trí chân trụ trước khi tách đầu kéo.</b></div>
+  </div>
+</section>
+
+<!-- 26 · WN3 cổng 2 -->
+<section class="slide inc" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">WN3: đuôi container va quẹt tại cổng 2</h2></div><img class="pop" data-src="img/s2_7.webp" alt=""></div>
+  <div class="body">
+    <div class="ph rv"><img data-src="img/s26_1.webp" alt="Camera ghi lại đuôi container va quẹt tại cổng"></div>
+    <div class="rv"><span class="chip">15/07/2024 · 17:10</span></div>
+    <p class="rv">Khi di chuyển từ cổng 3, đuôi container va vào dù và xe máy tại cổng 2, suýt va vào bảo vệ.</p>
+    <div class="rv"><h3>Hậu quả</h3><p>Dù bị rách, xe máy hư hỏng nhẹ.</p></div>
+    <div class="lesson rv"><img data-src="img/s26_2.webp" alt=""><b>Bài học: kiểm soát vùng quét đuôi xe, chú ý người và vật cản khi chuyển hướng.</b></div>
+  </div>
+</section>
+
+<!-- 27 · WN3 B2 -->
+<section class="slide inc" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">WN3: container nghiêng khi tách đầu kéo</h2></div><img class="pop" data-src="img/s2_7.webp" alt=""></div>
+  <div class="body">
+    <div class="ph rv"><img data-src="img/s27_1.webp" alt="Container nghiêng sang phải"></div>
+    <div class="rv"><span class="chip">07/07/2025 · Cửa 203, B2</span></div>
+    <p class="rv">Container nghiêng sang phải khi rút đầu kéo khỏi rơ-moóc. Không có người bị thương.</p>
+    <div class="rv"><h3>Nguyên nhân ban đầu</h3><p>Một chân trụ bị sập bất ngờ, do xuống cấp.</p></div>
+    <div class="lesson rv"><img data-src="img/s27_2.webp" alt=""><b>Bài học: kiểm tra thiết bị trước khi vận hành.</b></div>
+  </div>
+</section>
+
+<!-- 28 · WN3 máng 407 -->
+<section class="slide inc" data-min="10">
+  <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">WN3: cửa container va vào cửa cuốn</h2></div><img class="pop" data-src="img/s2_7.webp" alt=""></div>
+  <div class="body">
+    <div class="ph rv"><img data-src="img/s28_1.webp" alt="Cửa cuốn bị sập"></div>
+    <div class="rv"><span class="chip">29/06/2025 · Máng 407</span></div>
+    <p class="rv">Tài xế kéo nhầm container, đi khoảng 5 m rồi lùi lại. Cửa container bung ra và va vào cửa cuốn.</p>
+    <div class="rv"><h3>Hậu quả</h3><p>Cửa cuốn sập, rơi khỏi máng.</p></div>
+    <div class="lesson rv"><img data-src="img/s28_2.webp" alt=""><b>Bài học: kiểm tra tình trạng cửa trước khi vào máng.</b></div>
+  </div>
+</section>
+
+  </div><button type="button" class="more" id="sMore" hidden>↓ Kéo xuống xem tiếp</button></div>
+  <div class="nav">
+    <div class="hint" id="sHint"></div>
+    <div class="row2">
+      <button class="btn sec" id="sPrev" type="button">‹ Trước</button>
+      <button class="btn" id="sNext" type="button"><span class="fill" id="sFill"></span><span id="sNextTx">Tiếp ›</span></button>
+    </div>
+  </div>
+</div>
+<div class="zoomer" id="sZoom" hidden><button type="button" id="sZClose">Đóng ✕</button><img id="sZImg" alt=""></div>
+</section>
+
+<!-- 3. Quiz -->
+<section class="screen" id="s-quiz">
+  <div class="card">
+    <h2>Bài kiểm tra</h2>
+    <p class="mut">Cần đúng <b id="qPass"></b>/<b id="qTotal"></b> câu để đạt.</p>
+    <div id="quizBody" style="margin-top:10px"></div>
+    <div class="qnav" id="qnav"></div>
+    <div class="row">
+      <button class="btn sec" id="qPrev" onclick="quizMove(-1)">‹ Câu trước</button>
+      <button class="btn" id="qNext" onclick="quizMove(1)">Câu tiếp ›</button>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Kết quả -->
+<section class="screen" id="s-result">
+  <div class="card" id="resultCard"></div>
+</section>
+
+<!-- 5. Cam kết -->
+<section class="screen" id="s-commit">
+  <div class="card">
+    <h2>Bản cam kết an toàn</h2>
+    <p class="mut">Đọc kỹ nội dung, tick đồng ý và ký tên.</p>
+    <div class="commit" id="commitText"></div>
+    <label class="chk"><input type="checkbox" id="agree" onchange="checkCommit()"> <span>Tôi đã đọc, hiểu và cam kết thực hiện đúng toàn bộ nội dung trên.</span></label>
+    <label style="margin-top:16px">Chữ ký <b>*</b></label>
+    <div class="sigwrap"><canvas id="sig"></canvas><div class="ph" id="sigPh">Ký tên bằng ngón tay tại đây</div></div>
+    <button class="link" onclick="sigClear()">↺ Ký lại</button>
+    <button class="btn ok" id="btnCommit" disabled onclick="submitAll()">Xác nhận &amp; gửi kết quả</button>
+  </div>
+</section>
+
+<!-- 6. Gửi Forms -->
+<section class="screen" id="s-send">
+  <div class="card">
+    <h2>Bước cuối: gửi kết quả</h2>
+    <p>Bấm nút bên dưới để mở biểu mẫu. Thông tin đã được điền sẵn, anh/chị chỉ cần <b>kéo xuống cuối và bấm "Gửi" (Submit)</b>.</p>
+    <a class="btn" id="formsLink" href="#" target="_blank" rel="noopener" style="text-align:center;text-decoration:none" onclick="return openForms()">Mở biểu mẫu &amp; gửi</a>
+    <div id="demoNote"></div>
+    <label class="chk"><input type="checkbox" id="sentChk" onchange="document.getElementById('btnShowCard').disabled=!this.checked"> <span>Tôi đã bấm "Gửi" trên biểu mẫu thành công.</span></label>
+    <button class="btn ok" id="btnShowCard" disabled onclick="finish()">Nhận thẻ chứng nhận</button>
+  </div>
+</section>
+
+<!-- 6b. Tra thẻ bằng CCCD -->
+<section class="screen" id="s-lookup">
+  <div class="card">
+    <h2>Xem thẻ chứng nhận</h2>
+    <p class="mut">Nhập số CCCD đã dùng khi đăng ký. Thẻ sẽ hiện kết quả lần đào tạo gần nhất.</p>
+    <label>Số CCCD</label>
+    <input type="tel" id="lk_cccd" inputmode="numeric" maxlength="12" placeholder="12 chữ số" onkeydown="if(event.key==='Enter')lookupCard()">
+    <div class="errmsg" id="e_lk"></div>
+    <button class="btn" onclick="lookupCard()">Xem thẻ</button>
+    <button class="btn sec" onclick="go('welcome')">‹ Quay lại</button>
+  </div>
+</section>
+
+<!-- 7. Thẻ -->
+<section class="screen" id="s-card">
+  <div class="card sendbox" id="sendBox" hidden>
+    <h2>Bước cuối: gửi kết quả cho EHS</h2>
+    <ol class="sendsteps"><li>Bấm nút <b>Gửi kết quả cho EHS</b> bên dưới.</li><li>Trên trang biểu mẫu, <b>kéo xuống cuối và bấm "Gửi" (Submit)</b> – thông tin đã điền sẵn.</li><li>Thấy thông báo gửi thành công là xong. Bấm nút Quay lại (◀) để về thẻ.</li></ol>
+    <a class="btn" id="formsLink2" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none" onclick="return openForms2()">Gửi kết quả cho EHS</a>
+    <p class="mut" style="margin-top:10px;font-size:14px">Không quay lại được trang này: <b>quét lại mã QR → "Xem thẻ chứng nhận của tôi" → nhập số CCCD</b>. Chưa chắc đã gửi được thì bấm gửi lại – gửi 2 lần không sao.</p>
+  </div>
+  <div id="certBox"></div>
+  <p class="hint">Xuất trình thẻ này cho bảo vệ tại cổng. Đồng hồ và dải sáng chuyển động giúp bảo vệ phân biệt thẻ thật với ảnh chụp màn hình.</p>
+  <p class="hint">Lần sau: quét lại mã QR <b>bằng điện thoại này</b>, chọn "Xem thẻ chứng nhận của tôi" và nhập số CCCD.</p>
+  <button class="btn sec" onclick="go('welcome')">Về trang chính</button>
+</section>
+
+</main>
+<div class="cam" id="cam" hidden>
+  <div class="sub">Nhìn thẳng vào camera, đưa khuôn mặt vào khung bầu dục</div>
+  <div class="view"><video id="camVideo" playsinline webkit-playsinline muted autoplay></video><div class="guide"></div></div>
+  <div class="row"><button type="button" onclick="closeCamera()">Hủy</button><button type="button" class="shot" onclick="takeShot()">📷 Chụp</button></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   CẤU HÌNH — chỉnh tại đây
+   ===================================================================== */
+const CONFIG = {
+  company: "WANEK",
+  course: "Đào tạo an toàn nhà thầu vận tải",
+  cardCourse: "Đào tạo an toàn vận tải",   // dòng tên khóa in trên thẻ
+  certPrefix: "WN-VT",
+  passScore: 8,             // số câu đúng tối thiểu
+  validMonths: 6,           // hiệu lực thẻ (tháng)
+  warnMonths: 1,            // cảnh báo màu cam khi còn ≤ 1 tháng
+  quizCount: 10,            // số câu mỗi lần làm bài (lấy từ ngân hàng 25 câu)
+  shuffleQuestions: true,
+  shuffleOptions: true,
+
+  /* Microsoft Forms – link điền sẵn (pre-filled).
+     Cách lấy: mở Form > ... > Get pre-filled link > điền thử từng câu > Get link.
+     Copy phần trước dấu "&r" làm baseUrl, và mã "rXXXXXXXX..." của từng câu vào fields.
+     Để trống baseUrl = chế độ chạy thử (không gửi). */
+  forms: {
+    baseUrl: "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=_ZydWi7DwUqp7f6D30-eTf3z0L2Hdu1CnR47Hh0ZS6tURTdXNDNTRzBMN1RRTDRVNE41NFJBTUcxTCQlQCN0PWcu",
+    fields: {
+      name:   "r8706d8b9eba64088ae3b6b00562cec8f",  // 1. Họ và tên
+      cccd:   "r95c69c192e724d46883d31037710b957",  // 2. Số CCCD
+      dob:    "r2eb75035e5be4cd7aaafc8e58d13a8f0",  // 3. Ngày sinh
+      unit:   "r68d18fcf7e78418aa87d78055c1ddf23",  // 4. Đơn vị vận tải
+      pos:    "r650988e4d7394a5691cd169dbf3dfa3e",  // 5. Chức vụ
+      phone:  "r6853c2aee46444a091d7accf1c840385",  // 6. Số điện thoại
+      score:  "r34403bce1e2d498eab87a34639334d4b",  // 7. Điểm
+      code:   "r1bbdcf5439b847e38560233d6619158d",  // 8. Mã chứng nhận
+      issued: "rea3f7ada47c842709c3405824a88490a",  // 9. Ngày cấp
+      expiry: "r401fe82868df48279a184ed039832da8",  // 10. Ngày hết hạn
+      sign:   "r1ff987a866ee4f2f94b7c927901ff4fb",  // 11. Chữ ký (SVG)
+      photo:  "r421dd15e7a2f448f8bb0fbdcf3920667"   // 12. Ảnh (data:image/jpeg;base64)
+    }
+  }
+};
+
+/* Nội dung đào tạo: 28 trang HTML nằm trong #s-slides; ảnh trong thư mục img/ */
+
+/* NGÂN HÀNG 25 CÂU HỎI — dựa trên tài liệu "Training for Truck driver & Asst" và
+   bản cam kết EHS-S-23-001_F02V02.
+   g = nhóm nội dung (1–7 theo các phần quy định của tài liệu; phần 8 – sự cố tham khảo – không dùng để ra câu hỏi) · a = vị trí đáp án đúng (từ 0)
+   keepLast:true = đáp án cuối ("Tất cả…") luôn đứng cuối khi đảo thứ tự.
+   Mỗi lần làm bài: lấy 1 câu ở mỗi nhóm (7 nhóm) + 3 câu ngẫu nhiên = 10 câu. */
+const QUIZ_BANK = [
+  // 1 · Quy định chung
+  {id:1,g:1,q:"Hành vi nào bị cấm vĩnh viễn ngay lần vi phạm đầu tiên?",
+   o:["Hút thuốc sai nơi quy định hoặc sử dụng chất kích thích","Không chêm bánh xe khi dừng đỗ tại bãi","Điều khiển xe khi không có phụ lái hỗ trợ","Chạy quá tốc độ 10 km/h trong nhà máy"],a:0},
+  {id:2,g:1,q:"Vi phạm lỗi nặng lần thứ nhất sẽ bị xử lý như thế nào?",
+   o:["Nhắc nhở","Cấm 7 ngày","Cấm 15 ngày","Cấm vĩnh viễn"],a:2},
+  {id:3,g:1,q:"Hành vi nào sau đây thuộc nhóm LỖI NẶNG?",
+   o:["Không chêm bánh xe khi đỗ","Khạc nhổ bừa bãi trong nhà máy","Sai tác phong khi làm việc","Điều khiển xe khi không có phụ lái"],a:3},
+  {id:4,g:1,q:"Trang phục bắt buộc của tài xế và phụ lái khi làm việc tại nhà máy là gì?",
+   o:["Áo phản quang và dép quai","Áo phản quang và giày bít mũi, bít gót","Áo bảo hộ thường và giày thể thao hở gót","Chỉ cần đội mũ bảo hộ"],a:1},
+  {id:24,g:1,q:"Kiểm tra phương tiện trước khi vận hành bao gồm những hạng mục nào?",
+   o:["Chỉ lốp xe và đèn của đầu kéo","Đầu kéo và cả rơ-moóc, container (khung, chân trụ, mâm đệm, thùng)","Chỉ rơ-moóc và container, không cần kiểm tra đầu kéo","Chỉ kiểm tra khi xe có dấu hiệu hư hỏng"],a:1},
+  // 2 · Ra vào cổng
+  {id:5,g:2,q:"Chứng nhận đào tạo an toàn định kỳ có hiệu lực bao lâu?",
+   o:["1 tháng","3 tháng","6 tháng","12 tháng"],a:2},
+  {id:6,g:2,q:"Thẻ chứng nhận hiển thị MÀU ĐỎ có nghĩa là gì?",
+   o:["Đạt, còn hiệu lực trên 1 tháng","Sắp hết hạn, vẫn được vào cổng bình thường","Hết hiệu lực, không được vào cổng, phải đào tạo lại","Chỉ được vào cổng phụ, không vào xưởng"],a:2},
+  {id:12,g:2,q:"Thẻ chứng nhận chuyển sang MÀU CAM có nghĩa là gì?",
+   o:["Hết hiệu lực, không được vào cổng nữa","Còn 1 tháng trở xuống, cần đào tạo lại trước ngày hết hạn","Đang bị cấm vào nhà máy theo danh sách cấm","Đạt, còn hiệu lực trên 3 tháng"],a:1},
+  // 3 · Giờ hoạt động
+  {id:7,g:3,q:"Đường nội bộ WN3 hạn chế phương tiện lưu thông vào các khung giờ nào?",
+   o:["10:45–11:30, 17:00–17:40, 22:50–00:10","06:00–07:00, 19:30–20:15","06:00–07:30, 17:30–18:15, 19:15–20:15","12:00–13:00, 18:00–19:00"],a:0},
+  {id:8,g:3,q:"Cổng 1 nhà máy WN3 hạn chế xe ra vào trong các khung giờ nào?",
+   o:["06:00–07:00, 15:45–16:15, 17:30–18:00, 19:30–20:15, 04:15–06:00","06:00–07:30, 15:45–16:15, 17:30–18:00, 19:15–20:15","10:45–11:30, 17:00–17:40, 22:50–00:10","Chỉ 06:00–07:00"],a:0},
+  {id:23,g:3,q:"Trong khung giờ hạn chế tại các cổng WN3, điều gì KHÔNG được phép?",
+   o:["Ra vào cổng và di chuyển xe trên đường nội bộ từ Cổng 1 – 3","Chỉ cấm xe ra khỏi cổng, xe vào vẫn được","Chỉ cấm xe máy của nhân viên qua cổng","Chỉ hạn chế ở Cổng 3, các cổng khác bình thường"],a:0},
+  // 4 · Di chuyển
+  {id:9,g:4,q:"Tốc độ tối đa khi di chuyển trong nhà máy Wanek là bao nhiêu?",
+   o:["10 km/h","15 km/h","20 km/h","30 km/h"],a:0},
+  {id:10,g:4,q:"Phụ lái phải đứng ở đâu khi hỗ trợ tài xế điều khiển xe?",
+   o:["Ngồi trên cabin","Đứng phía sau đuôi xe, trong điểm mù","Đứng ở vị trí an toàn mà tài xế nhìn thấy được","Đứng ngoài cổng bảo vệ chờ xe lùi xong"],a:2},
+  {id:11,g:4,q:"Khi nào phải sử dụng đèn, còi và xi nhan?",
+   o:["Chỉ khi di chuyển vào ban đêm hoặc trời mưa","Khi gần người đi bộ, lùi/rẽ, qua đường hẹp hoặc khuất tầm nhìn","Chỉ khi ra vào cổng và khi đỗ xe","Chỉ khi bảo vệ hoặc phụ lái yêu cầu"],a:1},
+  {id:13,g:4,q:"Trước khi kéo container rời vị trí tải hàng, cần làm những việc nào?",
+   o:["Kết nối đủ dây hơi, dây điện","Thu chân trụ lên hoàn toàn","Gỡ chèn bánh xe và chờ phụ lái cho phép","Tất cả các việc trên"],a:3,keepLast:true},
+  {id:14,g:4,q:"Xe container có được đi qua khu vực có biển cấm đi qua đường ống hút bụi tại WN3 không?",
+   o:["Được, nếu đi chậm","Được, nếu có phụ lái hướng dẫn","Không được","Được, nếu ngoài khung giờ hạn chế"],a:2},
+  // 5 · Đỗ xe
+  {id:15,g:5,q:"Khi đỗ xe và xuống xe, tài xế phải làm gì?",
+   o:["Cài phanh tay, tắt máy và chêm bánh xe","Chỉ cần cài phanh tay, không cần chêm bánh","Tắt máy, không cần cài phanh tay nếu đã chêm bánh","Chỉ chêm bánh khi đỗ lâu"],a:0},
+  {id:16,g:5,q:"Xe được phép đỗ ở vị trí nào?",
+   o:["Trên nắp cống, mương thoát nước nếu đỗ ngắn","Vị trí có vạch vàng và không có biển cấm","Lề đường nội bộ nếu bật đèn cảnh báo","Trước cửa cuốn kho hàng"],a:1},
+  {id:17,g:5,q:"Trước khi hạ chân trụ, cần kiểm tra nền như thế nào?",
+   o:["Nền đất bằng phẳng là đủ, không cần bê tông","Đặt lên nắp cống vì nắp cống bằng và chắc chắn","Nền bê tông cứng, bằng phẳng, đúng tấm thép; tránh hố ga, nắp cống","Chỉ cần kiểm tra nền khi trời mưa hoặc ngập"],a:2},
+  // 6 · PCCC
+  {id:18,g:6,q:"Thứ tự đúng khi sử dụng bình chữa cháy là gì?",
+   o:["Bóp van → rút chốt → hướng vòi vào gốc lửa → quét ngang","Rút chốt → hướng vòi vào gốc lửa → bóp van → quét ngang gốc đám cháy","Hướng vòi lên ngọn lửa → rút chốt → bóp van → giữ yên vòi","Rút chốt → bóp van → hướng vòi lên ngọn lửa → phun liên tục"],a:1},
+  {id:19,g:6,q:"Khi phun bình chữa cháy, nên đứng ở vị trí nào?",
+   o:["Sát đám cháy","Cách 1,5–4 m, đứng xuôi chiều gió","Cách 1,5–4 m, đứng ngược chiều gió","Cách 10 m trở lên"],a:1},
+  {id:25,g:6,q:"Đặc điểm nhận biết bình chữa cháy CO₂ là gì?",
+   o:["Vòi nhỏ, có đồng hồ đo áp suất","Loa phun lớn, không có đồng hồ đo","Vòi nhỏ, không có đồng hồ đo","Có van xả ở đáy bình"],a:1},
+  // 7 · Ứng phó sự cố
+  {id:20,g:7,q:"Khi phát hiện đám cháy, việc đầu tiên cần làm là gì?",
+   o:["Lái xe ra khỏi nhà máy ngay lập tức","Giữ bình tĩnh, hô \"Cháy!\" và nhấn chuông báo cháy","Tự dập lửa bằng bất cứ thứ gì có sẵn","Gọi điện báo cho công ty vận tải trước"],a:1},
+  {id:21,g:7,q:"Khi nghe chuông báo cháy hoặc lệnh sơ tán, tài xế và phụ lái phải làm gì?",
+   o:["Lái xe chạy ra cổng gần nhất để thoát nhanh","Ở lại trong cabin, chờ bảo vệ hướng dẫn","Theo lối thoát hiểm đến điểm tập kết nhà thầu và điểm danh","Tập trung tại cổng bảo vệ gần nhất để điểm danh"],a:2},
+  {id:22,g:7,q:"Trong quá trình lái xe trong nhà máy, nếu gây ra sự cố bạn sẽ làm gì?",
+   o:["Lập biên bản với người liên quan rồi tiếp tục di chuyển","Tự xử lý theo đánh giá của bản thân rồi báo sau","Di chuyển xe sang chỗ khác cho thông đường","Giữ nguyên hiện trường và thông báo Logistics, EHS, Bảo vệ"],a:3}
+];
+
+/* BẢN CAM KẾT — theo biểu mẫu EHS-S-23-001_F02V02 */
+const COMMITMENT = {
+  code: "EHS-S-23-001_F02V02",
+  title: "CAM KẾT VẬN HÀNH AN TOÀN ĐỐI VỚI XE CONTAINER",
+  intro: "Các hoạt động được liệt kê bên dưới là để duy trì an toàn cho hoạt động đấu/cắt container, đậu và di chuyển trong nhà máy.",
+  sections: [
+    {h:"I. Trước khi ráp khung rơ moóc", items:[
+      "Đảm bảo rằng không còn hoạt động nào diễn ra trong container.",
+      "Cục chêm bánh xe vẫn đang đặt chặn bánh xe đúng cách.",
+      "Chốt khóa tay tại mâm đệm đã được kéo.",
+      "Chân trụ vẫn trụ vững trên nền, không biến dạng, gãy, nứt.",
+      "Đảm bảo người phụ lái đứng tại vị trí có tầm nhìn với tài xế để ra tín hiệu, không có người qua lại xung quanh và đằng sau đuôi xe."
+    ]},
+    {h:"II. Trước khi cắt khung rơ moóc", items:[
+      "Thắng tay đã được kéo khi rời khỏi buồng lái.",
+      "Cục chêm bánh xe đã được đặt chặn tại bánh xe ở khung rơ moóc đúng cách.",
+      "Đường dây cấp khí nén và điện cho khung rơ moóc đã được tháo.",
+      "Chốt khóa tay tại mâm đệm đã được kéo.",
+      "Hai chân trụ được hạ xuống TRÊN NỀN CỨNG, không biến dạng, gãy, nứt, mất cân bằng.",
+      "Đảm bảo người phụ lái đứng tại vị trí có tầm nhìn với tài xế để ra tín hiệu, không có người qua lại xung quanh và đằng sau đuôi xe."
+    ]},
+    {h:"III. Khi xe di chuyển với khung rơ moóc", items:[
+      "Đảm bảo rằng khung rơ moóc đã được kết nối với mâm đệm và khóa chắc chắn.",
+      "Tất cả các đường dây cấp khí nén, điện đã được kết nối với khung rơ moóc.",
+      "Chân trụ đã được THU LÊN HOÀN TOÀN.",
+      "Thùng container đã được cài chốt với khung rơ moóc.",
+      "Các chêm chặn bánh xe đã được tháo bỏ."
+    ]}
+  ],
+  closing: [
+    "Tất cả các nhà thầu được yêu cầu phải giữ một bản sao Bản cam kết vận hành an toàn đối với xe container, đọc và hiểu đầy đủ nội dung của nó. Nhà thầu cũng chịu trách nhiệm đảm bảo rằng tất cả nhân viên tuân thủ các quy tắc này.",
+    "Bằng việc ký tên trên bản cam kết này, tài xế/phụ lái có trách nhiệm tuân thủ và thực hiện đầy đủ các bước này."
+  ]
+};
+
+/* =====================================================================
+   ỨNG DỤNG
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const STORE_KEY = "dtnt_vantai_certs";   // { cccd: thẻ gần nhất }
+const OLD_KEY   = "dtnt_vantai_cert";    // bản cũ (1 thẻ/máy)
+let user = {}, slideIdx = 0, seen = [], slideTimer = null, slideLeft = 0;
+let quizOrder = [], quizIdx = 0, answers = [], score = 0, cert = null;
+
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2600)}
+function setStep(n){[...$("steps").children].forEach((e,i)=>e.classList.toggle("on",i<n))}
+function go(name){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("show"));
+  $("s-"+name).classList.add("show");
+  if(name!=="slides") document.body.classList.remove("lock");
+  window.scrollTo(0,0);
+  const map={welcome:0,lookup:0,register:1,slides:2,quiz:3,result:3,commit:4,send:5,card:5};
+  setStep(map[name]);
+  if(name==="slides") startSlides();
+  if(name==="quiz") startQuiz();
+  if(name==="commit") initCommit();
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function fmtDate(d){return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+/* ---- Khởi tạo ---- */
+(function init(){
+  $("hdTitle").textContent=CONFIG.course; $("hdCo").textContent=CONFIG.company;
+  $("wPass").textContent=CONFIG.passScore+"/"+CONFIG.quizCount; $("wValid").textContent=CONFIG.validMonths;
+  $("qPass").textContent=CONFIG.passScore; $("qTotal").textContent=CONFIG.quizCount;
+  // chuyển thẻ từ bản cũ sang kho mới
+  try{const o=JSON.parse(localStorage.getItem(OLD_KEY)||"null");if(o&&o.cccd){saveCert(o);localStorage.removeItem(OLD_KEY)}}catch(e){}
+  setStep(0);
+})();
+
+/* ---- Đăng ký ---- */
+function submitRegister(){
+  const v=id=>$(id).value.trim();
+  const f={name:v("f_name"),cccd:v("f_cccd"),dob:v("f_dob"),unit:v("f_unit"),pos:v("f_pos"),phone:v("f_phone")};
+  const err={};
+  if(f.name.split(/\s+/).length<2) err.name="Vui lòng nhập đầy đủ họ và tên.";
+  if(!/^\d{12}$/.test(f.cccd)) err.cccd="Số CCCD phải gồm đúng 12 chữ số.";
+  if(!f.dob) err.dob="Vui lòng chọn ngày sinh.";
+  else{const age=(Date.now()-new Date(f.dob))/31557600000; if(age<18||age>75) err.dob="Ngày sinh không hợp lệ (phải từ 18 tuổi).";}
+  if(!f.unit) err.unit="Vui lòng nhập đơn vị vận tải.";
+  if(!f.pos) err.pos="Vui lòng chọn chức vụ.";
+  if(!/^0(3|5|7|8|9)\d{8}$/.test(f.phone)) err.phone="Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0).";
+  if(!photo.card) err.photo="Vui lòng chụp ảnh chân dung.";
+  if(!$("f_consent").checked) err.consent="Vui lòng tick đồng ý để tiếp tục.";
+  ["name","cccd","dob","unit","pos","phone"].forEach(k=>{
+    $("e_"+k).textContent=err[k]||""; $("f_"+k).classList.toggle("err",!!err[k]);
+  });
+  $("e_photo").textContent=err.photo||""; $("photoBox").classList.toggle("err",!!err.photo);
+  $("e_consent").textContent=err.consent||"";
+  if(Object.keys(err).length){toast("Vui lòng kiểm tra lại thông tin");return}
+  f.name=f.name.replace(/\s+/g," ").toUpperCase(); f.unit=f.unit.replace(/\s+/g," ").toUpperCase();
+  f.photo=photo.card; f.photoThumb=photo.thumb;
+  user=f; go("slides");
+}
+
+/* ---- Ảnh chân dung ----
+   card : 240x300 JPEG — hiển thị trên thẻ, lưu trên điện thoại
+   thumb: 60x75 JPEG nén mạnh — gửi kèm Forms (giới hạn độ dài link) */
+const photo={card:"",thumb:"",thumbs:[]};
+const PHOTO_MAX=3800, URL_MAX=7600;
+function toUpper(el){const p=el.selectionStart,e=el.selectionEnd,u=el.value.toUpperCase();if(u!==el.value){el.value=u;try{el.setSelectionRange(p,e)}catch(x){}}}
+
+/* Ảnh chân dung: giữ nguyên khung hình và chiều như lúc chụp, chỉ thu nhỏ dung lượng */
+function exportFit(img,maxW,maxH,q,gray){
+  const k=Math.min(1,maxW/img.width,maxH/img.height);
+  const w=Math.max(1,Math.round(img.width*k)), h=Math.max(1,Math.round(img.height*k));
+  const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
+  x.drawImage(img,0,0,w,h);
+  if(gray){const d=x.getImageData(0,0,w,h),a=d.data;for(let i=0;i<a.length;i+=4){const g=.3*a[i]+.59*a[i+1]+.11*a[i+2];a[i]=a[i+1]=a[i+2]=g}x.putImageData(d,0,0)}
+  return c.toDataURL("image/jpeg",q);
+}
+/* Ảnh chân dung
+   - Trình duyệt thường (Chrome/Safari): chụp ngay trong trang, ảnh giống y khung xem.
+   - Trình duyệt trong ứng dụng (Zalo, Facebook, Google…): các app này hay phát camera
+     thành video toàn màn hình, che nút Chụp → dùng camera của điện thoại, kèm nút
+     "Lật ảnh" để chỉnh chiều nếu ảnh bị ngược. */
+const UA=navigator.userAgent||"";
+const IN_APP=(()=>{const m=UA.match(/Zalo|FBAN|FBAV|FB_IAB|Instagram|Line\/|MicroMessenger|TikTok|musical_ly|GSA\//i);
+  if(m) return {Zalo:"Zalo",GSA:"ứng dụng Google",Line:"LINE",MicroMessenger:"WeChat",Instagram:"Instagram",TikTok:"TikTok",musical_ly:"TikTok"}[m[0].replace("/","")]||"Facebook";
+  if(/Android/.test(UA)&&/; wv\)/.test(UA)) return "ứng dụng";
+  return null})();
+let camStream=null, camBlocked=!!IN_APP, photoSrc=null, photoFlip=false;
+async function openCamera(){
+  if(camBlocked||!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){$("f_photo").click();return}
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:960},height:{ideal:1280}},audio:false});
+    const v=$("camVideo"); v.srcObject=camStream; $("cam").hidden=false;
+    try{await v.play()}catch(e){}
+    if(v.webkitDisplayingFullscreen) camFallback();
+  }catch(e){
+    closeCamera(); camBlocked=true;
+    toast("Không mở được camera trong trang, chuyển sang camera điện thoại");
+    $("f_photo").click();
+  }
+}
+function camFallback(){
+  closeCamera(); camBlocked=true;
+  toast("Ứng dụng này không hỗ trợ camera trong trang. Bấm Chụp ảnh lần nữa để dùng camera điện thoại.");
+}
+$("camVideo").addEventListener("webkitbeginfullscreen",camFallback);
+function closeCamera(){
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}
+  const v=$("camVideo"); try{v.pause();v.srcObject=null}catch(e){}
+  $("cam").hidden=true;
+}
+function takeShot(){
+  const v=$("camVideo"), vw=v.videoWidth, vh=v.videoHeight;
+  if(!vw||!vh){toast("Camera chưa sẵn sàng, thử lại");return}
+  // cắt đúng phần đang hiện trong khung 3:4 và lật như khung xem (soi gương)
+  const R=3/4; let sw=vw, sh=vh, sx=0, sy=0;
+  if(vw/vh>R){sw=vh*R;sx=(vw-sw)/2}else{sh=vw/R;sy=(vh-sh)/2}
+  const c=document.createElement("canvas"); c.width=Math.round(sw); c.height=Math.round(sh);
+  const x=c.getContext("2d"); x.translate(c.width,0); x.scale(-1,1);
+  x.drawImage(v,sx,sy,sw,sh,0,0,c.width,c.height);
+  closeCamera();
+  setPhoto(c,false);
+}
+function mirrored(img){
+  const c=document.createElement("canvas"); c.width=img.width; c.height=img.height;
+  const x=c.getContext("2d"); x.translate(c.width,0); x.scale(-1,1); x.drawImage(img,0,0); return c;
+}
+function setPhoto(img,canFlip){
+  photoSrc=img; photoFlip=false; renderPhoto();
+  $("btnRetake").style.display="inline";
+  $("btnFlip").style.display=canFlip?"inline":"none";
+}
+function renderPhoto(){
+  const img=photoFlip?mirrored(photoSrc):photoSrc;
+  photo.card=exportFit(img,300,400,0.82,false);
+  // Ảnh gửi Forms: luôn giữ MÀU, lớn nhất có thể trong giới hạn ô Forms (≤3800 ký tự).
+  // Tạo sẵn nhiều mức, lúc gửi chọn mức lớn nhất mà link Forms vẫn đủ ngắn.
+  const opts=[];
+  for(const [w,h] of [[96,128],[84,112],[72,96],[60,80]]){
+    for(let q=0.8;q>=0.39;q-=0.05){const t=exportFit(img,w,h,q,false);if(t.length<=PHOTO_MAX){opts.push(t);break}}
+  }
+  if(!opts.length) opts.push(exportFit(img,48,64,0.4,false));
+  photo.thumbs=opts; photo.thumb=opts[0];
+  $("photoBox").innerHTML=`<img src="${photo.card}" alt="Ảnh chân dung">`;
+  $("photoBox").classList.remove("err"); $("e_photo").textContent="";
+}
+function flipPhoto(){ if(!photoSrc)return; photoFlip=!photoFlip; renderPhoto(); }
+/* Ảnh từ camera điện thoại (Zalo, Facebook…): một số trình duyệt trong app KHÔNG tự xoay ảnh
+   theo thông tin EXIF → ảnh bị nằm ngang/ngược. Kiểm tra trình duyệt có tự xoay không,
+   nếu không thì tự đọc EXIF và xoay lại cho đúng như lúc chụp. */
+const EXIF_AUTO=new Promise(res=>{const t=new Image();t.onload=()=>res(t.width===1&&t.height===2);t.onerror=()=>res(true);
+  t.src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAABAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDFoooryz7w/9k="});
+function exifOrientation(buf){
+  try{const v=new DataView(buf); if(v.getUint16(0)!==0xFFD8) return 1;
+    let o=2; while(o<v.byteLength-4){const m=v.getUint16(o); const len=v.getUint16(o+2);
+      if(m===0xFFE1 && v.getUint32(o+4)===0x45786966){const t=o+10, le=v.getUint16(t)===0x4949;
+        const ifd=t+v.getUint32(t+4,le), n=v.getUint16(ifd,le);
+        for(let i=0;i<n;i++){const e=ifd+2+i*12; if(v.getUint16(e,le)===0x0112) return v.getUint16(e+8,le)}
+        return 1}
+      if((m&0xFF00)!==0xFF00) break; o+=2+len}
+  }catch(e){} return 1;
+}
+function drawOriented(img,ori,maxSide){
+  const k=Math.min(1,maxSide/Math.max(img.width,img.height));
+  const w=Math.round(img.width*k), h=Math.round(img.height*k), swap=ori>=5&&ori<=8;
+  const c=document.createElement("canvas"); c.width=swap?h:w; c.height=swap?w:h; const x=c.getContext("2d");
+  switch(ori){case 2:x.transform(-1,0,0,1,w,0);break;case 3:x.transform(-1,0,0,-1,w,h);break;case 4:x.transform(1,0,0,-1,0,h);break;
+    case 5:x.transform(0,1,1,0,0,0);break;case 6:x.transform(0,1,-1,0,h,0);break;case 7:x.transform(0,-1,-1,0,h,w);break;case 8:x.transform(0,-1,1,0,0,w);break}
+  x.drawImage(img,0,0,w,h); return c;
+}
+function crop34(src){   // cắt giữa theo khung 3:4 giống khung chụp trong trang
+  const R=3/4; let sw=src.width, sh=src.height, sx=0, sy=0;
+  if(sw/sh>R){sw=sh*R;sx=(src.width-sw)/2}else if(sw/sh<R){sh=sw/R;sy=(src.height-sh)/2}
+  const c=document.createElement("canvas"); c.width=Math.round(sw); c.height=Math.round(sh);
+  c.getContext("2d").drawImage(src,sx,sy,sw,sh,0,0,c.width,c.height); return c;
+}
+async function onPhoto(inp){
+  const file=inp.files&&inp.files[0]; if(!file)return; inp.value="";
+  let ori=1; try{ if(!(await EXIF_AUTO)) ori=exifOrientation(await file.slice(0,131072).arrayBuffer()) }catch(e){}
+  const url=URL.createObjectURL(file), img=new Image();
+  img.onload=()=>{
+    URL.revokeObjectURL(url);
+    setPhoto(crop34(drawOriented(img,ori,1200)),true);
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);toast("Không đọc được ảnh, vui lòng chụp lại")};
+  img.src=url;
+}
+if(IN_APP){$("inappName").textContent=IN_APP;$("inappNote").hidden=false}
+
+/* ---- Slide: 28 trang có hiệu ứng ----
+   Mỗi trang: phần tử .rv / .pop / .shake / .pulse xuất hiện lần lượt;
+   nút "Tiếp" mở khi đã hiện hết và đủ thời gian data-min (giây). */
+let sSlides=[], sReady=false;
+const sReduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function sLoadImgs(i){
+  for(let k=Math.max(0,i-1);k<=Math.min(sSlides.length-1,i+2);k++)
+    sSlides[k].querySelectorAll("img[data-src]").forEach(im=>{im.src=im.dataset.src;im.removeAttribute("data-src")});
+}
+function sPrepare(){
+  sSlides=[...document.querySelectorAll("#s-slides .slide")];
+  // Trang mở đầu mỗi phần: tự liệt kê các bài trong phần
+  sSlides.forEach((sl,k)=>{const dv=sl.querySelector(".divider");if(!dv||dv.dataset.built)return;dv.dataset.built=1;
+    const num=dv.querySelector(".num"); if(num) dv.dataset.n=num.textContent.trim();
+    const tl=[]; for(let j=k+1;j<sSlides.length&&!sSlides[j].querySelector(".divider");j++){const h=sSlides[j].querySelector(".head h2");if(h)tl.push(h.textContent.trim())}
+    if(!tl.length)return;
+    const box=document.createElement("div"); box.className="topics";
+    box.innerHTML='<div class="tk rv">Trong phần này</div>'+tl.slice(0,5).map((t,x)=>`<div class="tp rv"><i>${x+1}</i><span>${t}</span></div>`).join("");
+    dv.querySelector(".mid").appendChild(box);
+  });
+  seen=sSlides.map(()=>false);
+  sSlides.forEach(s=>{
+    let t=0.1, max=0;
+    s.querySelectorAll(".rv,.pop,.shake,.pulse,.tl .bar i").forEach(el=>{
+      if(el.matches(".tl .bar i")){el.style.setProperty("--d",(t+0.1).toFixed(2)+"s");t+=0.15;return}
+      el.style.setProperty("--d",t.toFixed(2)+"s");
+      if(el.classList.contains("shake")){el.classList.add("pop");el.style.setProperty("--sd",(t+0.55).toFixed(2)+"s")}
+      max=Math.max(max,t+0.6); t+=el.classList.contains("pop")&&!el.classList.contains("rv")?0.12:0.16;
+    });
+    s.querySelectorAll(".hl").forEach(h=>{
+      const host=h.closest(".rv,.pop"); const d=host?parseFloat(host.style.getPropertyValue("--d"))||0:0;
+      h.style.setProperty("--hd",(d+0.45).toFixed(2)+"s"); max=Math.max(max,d+1.2);
+    });
+    s.dataset.reveal=sReduce?0:max.toFixed(1);
+  });
+  $("sPrev").onclick=()=>slideMove(-1); $("sNext").onclick=()=>slideMove(1);
+  $("sMore").onclick=sScrollMore;
+  sSlides.forEach(s=>s.addEventListener("scroll",()=>{if(s===sSlides[slideIdx])sUpdateNav()},{passive:true}));
+  addEventListener("resize",()=>{if(sReady)sUpdateNav()});
+  let x0=null,y0=null;
+  $("sStage").addEventListener("touchstart",e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  $("sStage").addEventListener("touchend",e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)slideMove(dx<0?1:-1);x0=null});
+  document.querySelectorAll("#s-slides [data-zoom]").forEach(m=>m.onclick=()=>{$("sZImg").src=m.querySelector("img").src;$("sZoom").hidden=false});
+  $("sZClose").onclick=()=>{$("sZoom").hidden=true};
+  sReady=true;
+}
+function sCount(s){
+  s.querySelectorAll("[data-count]").forEach(el=>{
+    const to=+el.dataset.count; if(sReduce){el.textContent=to;return}
+    let v=0; el.textContent=0;
+    const step=()=>{v++;el.textContent=v;if(v<to)setTimeout(step,70)};
+    setTimeout(step,600);
+  });
+}
+function startSlides(){
+  if(!sReady) sPrepare();
+  document.body.classList.add("lock");
+  renderSlide();
+}
+function sAtBottom(sl){return sl.scrollTop+sl.clientHeight>=sl.scrollHeight-16}
+let slideRunning=false;
+function sUpdateNav(){
+  const i=slideIdx, sl=sSlides[i], N=sSlides.length; if(!sl)return;
+  const more=!sAtBottom(sl);
+  $("sMore").hidden=!more;
+  if(slideRunning){$("sNextTx").textContent=`Đọc kỹ (${slideLeft}s)`;$("sNext").disabled=true;return}
+  $("sNext").disabled=false;
+  $("sNextTx").textContent=more?"Xem tiếp ↓":(i===N-1?"Làm bài kiểm tra ›":"Tiếp ›");
+}
+function sScrollMore(){const sl=sSlides[slideIdx];sl.scrollBy({top:Math.round(sl.clientHeight*.75),behavior:sReduce?"auto":"smooth"})}
+function renderSlide(){
+  const i=slideIdx, s=sSlides[i], N=sSlides.length;
+  sLoadImgs(i);
+  $("sTrack").style.transform=`translateX(-${i*100}%)`;
+  sSlides.forEach((x,k)=>x.classList.toggle("cur",k===i));
+  s.scrollTop=0;
+  if(seen[i]){s.classList.add("done")}else{s.classList.remove("on");void s.offsetWidth;s.classList.add("on");sCount(s)}
+  $("sCnt").textContent=(i+1)+"/"+N;
+  $("sProg").style.width=((i+1)/N*100)+"%";
+  $("sPrev").disabled=i===0;
+  clearInterval(slideTimer); slideRunning=false;
+  const fill=$("sFill"); fill.style.transition="none"; fill.style.transform="scaleX(0)";
+  // ảnh tải xong có thể làm trang dài ra → kiểm tra lại nút "Kéo xuống"
+  [50,400,1200,2500].forEach(t=>setTimeout(()=>{if(slideIdx===i)sUpdateNav()},t));
+  if(seen[i]){sUpdateNav();return}
+  const need=Math.max(+s.dataset.reveal,+s.dataset.min||8);
+  void fill.offsetWidth;
+  fill.style.transition=`transform ${need}s linear`; fill.style.transform="scaleX(1)";
+  slideLeft=Math.ceil(need); slideRunning=true; sUpdateNav();
+  slideTimer=setInterval(()=>{slideLeft--;if(slideLeft<=0){clearInterval(slideTimer);slideRunning=false;seen[i]=true;fill.style.transition="none";fill.style.transform="scaleX(0)"}sUpdateNav()},1000);
+}
+function slideMove(d){
+  if(d>0&&slideRunning){toast("Vui lòng đọc hết nội dung trang này");return}
+  if(d>0&&!sAtBottom(sSlides[slideIdx])){sScrollMore();return}   // chưa xem hết trang → cuộn xuống trước
+  const n=slideIdx+d;
+  if(n<0)return;
+  if(n>=sSlides.length){clearInterval(slideTimer);go("quiz");return}
+  slideIdx=n; renderSlide();
+}
+
+/* ---- Quiz ---- */
+/* Chọn đề: mỗi nhóm nội dung 1 câu, phần còn lại lấy ngẫu nhiên từ các câu chưa chọn;
+   tránh lặp lại đề vừa làm khi làm lại */
+let lastSet=[];
+function pickQuestions(){
+  const n=Math.min(CONFIG.quizCount,QUIZ_BANK.length);
+  // ưu tiên câu chưa có trong đề vừa làm, câu đã có xếp sau
+  const order=arr=>shuffle(arr).sort((x,y)=>lastSet.includes(x.id)-lastSet.includes(y.id));
+  const groups=shuffle([...new Set(QUIZ_BANK.map(q=>q.g))]).slice(0,n);
+  let pick=groups.map(g=>order(QUIZ_BANK.filter(q=>q.g===g))[0]);
+  pick=pick.concat(order(QUIZ_BANK.filter(q=>!pick.includes(q))).slice(0,n-pick.length));
+  lastSet=pick.map(q=>q.id);
+  return shuffle(pick);
+}
+let QUIZ=[];
+function startQuiz(){
+  QUIZ=pickQuestions();
+  quizOrder=QUIZ.map((Q,qi)=>{
+    let idx=Q.o.map((_,j)=>j), tail=[];
+    if(Q.keepLast){tail=[idx.pop()]}
+    return {qi,opts:(CONFIG.shuffleOptions?shuffle(idx):idx).concat(tail)};
+  });
+  answers=quizOrder.map(()=>null); quizIdx=0; renderQuiz();
+}
+function renderQuiz(){
+  const it=quizOrder[quizIdx], Q=QUIZ[it.qi];
+  $("quizBody").innerHTML=`<div class="q"><div class="qt">Câu ${quizIdx+1}. ${esc(Q.q)}</div>${
+    it.opts.map(oi=>`<label class="opt ${answers[quizIdx]===oi?"sel":""}"><input type="radio" name="qa" ${answers[quizIdx]===oi?"checked":""} onchange="pick(${oi})"><span>${esc(Q.o[oi])}</span></label>`).join("")}</div>`;
+  const done=answers.filter(a=>a!==null).length;
+  $("qnav").textContent=`Đã trả lời ${done}/${QUIZ.length}`;
+  $("qPrev").disabled=quizIdx===0;
+  const last=quizIdx===quizOrder.length-1;
+  $("qNext").textContent=last?"Nộp bài":"Câu tiếp ›";
+  $("qNext").disabled=answers[quizIdx]===null;
+}
+function pick(oi){answers[quizIdx]=oi;renderQuiz()}
+function quizMove(d){
+  if(d>0&&quizIdx===quizOrder.length-1){gradeQuiz();return}
+  quizIdx=Math.max(0,Math.min(quizOrder.length-1,quizIdx+d)); renderQuiz();
+}
+function gradeQuiz(){
+  if(answers.some(a=>a===null)){toast("Vui lòng trả lời tất cả câu hỏi");return}
+  score=quizOrder.reduce((s,it,i)=>s+(answers[i]===QUIZ[it.qi].a?1:0),0);
+  const pass=score>=CONFIG.passScore;
+  let html=`<h2 style="text-align:center">${pass?"Chúc mừng! Anh/chị đã ĐẠT":"Chưa đạt yêu cầu"}</h2>
+    <div class="score ${pass?"ok":"bad"}">${score}/${QUIZ.length}</div>
+    <p class="mut" style="text-align:center">Yêu cầu tối thiểu ${CONFIG.passScore}/${QUIZ.length} câu đúng</p>`;
+  if(pass){
+    html+=`<button class="btn ok" onclick="go('commit')">Tiếp tục ký cam kết</button>`;
+  }else{
+    const wrong=quizOrder.map((it,i)=>({it,i})).filter(({it,i})=>answers[i]!==QUIZ[it.qi].a);
+    html+=`<div class="review"><b>Các câu trả lời sai:</b>${wrong.map(({it})=>`<div class="x">• ${esc(QUIZ[it.qi].q)}<br><span style="color:var(--ok)">Đáp án đúng: ${esc(QUIZ[it.qi].o[QUIZ[it.qi].a])}</span></div>`).join("")}</div>
+      <p class="mut" style="margin-top:10px">Vui lòng xem lại nội dung đào tạo. Lần làm lại sẽ là bộ câu hỏi khác.</p>
+      <button class="btn" onclick="slideIdx=0;go('slides')">Xem lại nội dung</button>
+      <button class="btn sec" onclick="go('quiz')">Làm lại ngay</button>`;
+  }
+  $("resultCard").innerHTML=html; go("result");
+}
+
+/* ---- Cam kết & chữ ký ---- */
+let ctx, drawing=false, strokes=[], cur=null, sigInit=false;
+function initCommit(){
+  const dob=user.dob?fmtDate(new Date(user.dob)):"";
+  const C=COMMITMENT;
+  $("commitText").innerHTML=`<p style="text-align:center;font-weight:800;color:var(--pri-d)">${esc(C.title)}</p>
+    <p style="text-align:center;font-size:12px;color:var(--mut);margin-bottom:8px">${esc(C.code)}</p>
+    <div style="display:flex;gap:12px;align-items:center;margin:8px 0">
+      ${user.photo?`<img src="${user.photo}" alt="" style="width:64px;height:auto;max-height:100px;border-radius:6px;flex:none">`:""}
+      <p style="font-size:14px">Tên nhà thầu: <b>${esc(user.unit)}</b><br>Tài xế/Phụ lái: <b>${esc(user.name)}</b> (${esc(user.pos)})<br>CCCD: <b>${esc(user.cccd)}</b> · Ngày sinh: <b>${dob}</b></p>
+    </div>
+    <p>${esc(C.intro)}</p>
+    ${C.sections.map(s=>`<h3 style="color:var(--pri-d)">${esc(s.h)}</h3><ol>${s.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>`).join("")}
+    ${C.closing.map(t=>`<p style="margin-top:10px">${esc(t)}</p>`).join("")}
+    <p style="margin-top:10px;font-size:14px">Ngày: <b>${fmtDate(new Date())}</b></p>`;
+  if(!sigInit){setupSig();sigInit=true}
+  checkCommit();
+}
+function setupSig(){
+  const c=$("sig"); ctx=c.getContext("2d");
+  const resize=()=>{const r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=r.width*dpr;c.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);redraw()};
+  window.addEventListener("resize",resize); setTimeout(resize,30);
+  const pos=e=>{const r=c.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+  c.addEventListener("pointerdown",e=>{drawing=true;c.setPointerCapture(e.pointerId);cur=[pos(e)];strokes.push(cur);$("sigPh").style.display="none"});
+  c.addEventListener("pointermove",e=>{if(!drawing)return;cur.push(pos(e));redraw()});
+  const end=()=>{if(drawing){drawing=false;checkCommit()}};
+  c.addEventListener("pointerup",end); c.addEventListener("pointercancel",end);
+}
+function redraw(){
+  const c=$("sig"),r=c.getBoundingClientRect();
+  ctx.clearRect(0,0,r.width,r.height); ctx.lineWidth=2.4; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle="#0a2a5e";
+  strokes.forEach(s=>{ctx.beginPath();s.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));if(s.length===1)ctx.lineTo(s[0][0]+.1,s[0][1]);ctx.stroke()});
+}
+function sigClear(){strokes=[];redraw();$("sigPh").style.display="grid";checkCommit()}
+function sigLen(){return strokes.reduce((n,s)=>n+s.length,0)}
+function checkCommit(){$("btnCommit").disabled=!($("agree").checked&&sigLen()>15)}
+
+/* Chuyển chữ ký thành SVG gọn (để lưu qua Forms) */
+function sigToSVG(maxLen=1300){
+  const r=$("sig").getBoundingClientRect(), W=300, H=Math.round(300*r.height/r.width);
+  const sx=W/r.width;
+  for(let tol=1.5;tol<40;tol*=1.5){
+    let d="";
+    strokes.forEach(s=>{
+      let px=null,py=null,out=[];
+      s.forEach((p,i)=>{
+        const x=Math.round(p[0]*sx),y=Math.round(p[1]*sx);
+        if(i===0){out.push(`M${x} ${y}`);px=x;py=y;return}
+        if(Math.hypot(x-px,y-py)<tol&&i<s.length-1)return;
+        out.push(`l${x-px} ${y-py}`);px=x;py=y;
+      });
+      d+=out.join("");
+    });
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}"><path d="${d.replace(/ -/g,"-").replace(/l/g," l").trim()}" fill="none" stroke="#0a2a5e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    if(svg.length<=maxLen) return svg;
+  }
+  return "";
+}
+
+/* ---- Gửi kết quả ---- */
+function makeCode(){
+  const d=new Date(), ch="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let r=""; for(let i=0;i<4;i++) r+=ch[Math.floor(Math.random()*ch.length)];
+  return `${CONFIG.certPrefix}-${String(d.getDate()).padStart(2,"0")}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getFullYear()).slice(2)}-${r}`;  // ddmmyy
+}
+function submitAll(){
+  const now=new Date(), exp=new Date(now); exp.setMonth(exp.getMonth()+CONFIG.validMonths);
+  cert={...user, score:`${score}/${QUIZ.length}`, code:makeCode(), issued:now.toISOString(), expiry:exp.toISOString(), sign:sigToSVG(), sent:false};
+  // Chọn ảnh màu lớn nhất mà link Forms vẫn không quá dài
+  if(photo.thumbs&&photo.thumbs.length&&CONFIG.forms.baseUrl){
+    for(const t of photo.thumbs){cert.photoThumb=t; if(formsUrl().length<=URL_MAX) break}
+  }
+  // Cấp và lưu thẻ NGAY, trước khi mở Forms: lỡ kẹt ở trang Forms vẫn xem lại được thẻ bằng CCCD
+  if(!saveCert(cert)) toast("Không lưu được thẻ trên điện thoại (bộ nhớ trình duyệt bị chặn)");
+  renderCert(cert); go("card");
+}
+function openForms2(){
+  if(!CONFIG.forms.baseUrl){toast("Chưa cấu hình link Forms (chế độ chạy thử)");return false}
+  formsOpened=true; if(cert&&!cert.opened){cert.opened=true;saveCert(cert)} return true;
+}
+let formsOpened=false;
+function formsUrl(){
+  const F=CONFIG.forms.fields, c=cert;
+  const vals={name:c.name,cccd:c.cccd,dob:fmtDate(new Date(c.dob)),unit:c.unit,pos:c.pos,phone:c.phone,score:c.score,code:c.code,issued:fmtDate(new Date(c.issued)),expiry:fmtDate(new Date(c.expiry)),sign:c.sign,photo:c.photoThumb};
+  return CONFIG.forms.baseUrl+Object.keys(F).map(k=>`&${F[k]}=${encodeURIComponent(vals[k]||"")}`).join("");
+}
+function openForms(){
+  if(!CONFIG.forms.baseUrl){toast("Chưa cấu hình link Forms (chế độ chạy thử)");return false}
+  return true;
+}
+/* ---- Kho thẻ trên điện thoại: mỗi CCCD giữ thẻ của lần đào tạo gần nhất ---- */
+function loadCerts(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||"{}")||{}}catch(e){return {}}}
+function saveCert(c){
+  const all=loadCerts(), old=all[c.cccd];
+  if(!old||new Date(c.issued)>=new Date(old.issued)) all[c.cccd]=c;
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(all));return true}
+  catch(e){ // hết dung lượng: bỏ bớt ảnh lớn của thẻ cũ rồi thử lại
+    Object.values(all).forEach(x=>{if(x!==c&&x.photoThumb)x.photo=x.photoThumb});
+    try{localStorage.setItem(STORE_KEY,JSON.stringify(all));return true}catch(e2){return false}
+  }
+}
+function lookupCard(){
+  const v=$("lk_cccd").value.trim();
+  if(!/^\d{12}$/.test(v)){$("e_lk").textContent="Số CCCD phải gồm đúng 12 chữ số.";$("lk_cccd").classList.add("err");return}
+  $("lk_cccd").classList.remove("err");
+  const c=loadCerts()[v];
+  if(!c){$("e_lk").innerHTML="Không tìm thấy thẻ của CCCD này <b>trên điện thoại này</b>.<br>Nếu đã học trên điện thoại khác, vui lòng mở bằng điện thoại đó, hoặc liên hệ bảo vệ / EHS để tra cứu.";return}
+  $("e_lk").textContent=""; $("lk_cccd").value="";
+  cert=c; renderCert(c); go("card");
+}
+function retrain(c){
+  [["name","f_name"],["cccd","f_cccd"],["dob","f_dob"],["unit","f_unit"],["pos","f_pos"],["phone","f_phone"]].forEach(([k,id])=>$(id).value=c[k]||"");
+  go("register");
+}
+
+function finish(){
+  if(!saveCert(cert)) toast("Không lưu được thẻ trên điện thoại (bộ nhớ trình duyệt bị chặn)");
+  renderCert(cert); go("card");
+}
+
+
+/* ---- Thẻ chứng nhận ---- */
+let clockT=null;
+function renderCert(c){
+  // Khung gửi kết quả hiện trong 7 ngày đầu kể từ ngày cấp thẻ (học online)
+  const unsent=c.sent===false&&(Date.now()-new Date(c.issued).getTime())<7*86400000;
+  $("sendBox").hidden=!unsent;
+  if(unsent&&CONFIG.forms.baseUrl){const keep=cert;cert=c;$("formsLink2").href=formsUrl();cert=keep}
+  const exp=new Date(c.expiry), valid=Date.now()<exp.getTime();
+  // Trạng thái: còn hạn (xanh) · sắp hết hạn ≤ 1 tháng (cam) · hết hạn (đỏ)
+  const daysLeft=Math.ceil((exp-Date.now())/86400000);
+  const soon=new Date(exp); soon.setMonth(soon.getMonth()-CONFIG.warnMonths);
+  const state=!valid?"expired":(Date.now()>=soon.getTime()?"expiring":"ok");
+  const badge={ok:"ĐẠT – CÒN HIỆU LỰC",expiring:`SẮP HẾT HẠN – CÒN ${daysLeft} NGÀY`,expired:"HẾT HIỆU LỰC"}[state];
+  const sigSrc=c.sign?"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(c.sign):"";
+  $("certBox").innerHTML=`<div class="cert ${state==="ok"?"":state}"><div class="shine"></div>
+    <div class="top"><b>${esc(CONFIG.company)} · EHS</b><span class="badge"><span class="pulse"></span>${badge}</span></div>
+    <div class="body">
+      <div style="font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:.5px">Chứng nhận hoàn thành</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px">${esc(CONFIG.cardCourse)}</div>
+      <div class="person">
+        ${c.photo?`<img class="avatar" src="${c.photo}" alt="Ảnh chân dung">`:""}
+        <div class="name">${esc(c.name)}</div>
+      </div>
+      <div class="grid">
+        <span>CCCD</span><span>${esc(c.cccd)}</span>
+        <span>Ngày sinh</span><span>${fmtDate(new Date(c.dob))}</span>
+        <span>Đơn vị</span><span>${esc(c.unit)}</span>
+        <span>Chức vụ</span><span>${esc(c.pos)}</span>
+        <span>Điểm</span><span>${esc(c.score)}</span>
+        <span>Ngày cấp</span><span>${fmtDate(new Date(c.issued))}</span>
+        <span>Hết hạn</span><span><b>${fmtDate(exp)}</b></span>
+      </div>
+      ${sigSrc?`<div class="sigimg"><img src="${sigSrc}" alt="Chữ ký"></div>`:""}
+      <div class="code">${esc(c.code)}</div>
+      ${state==="expiring"?`<div class="warn">Thẻ sẽ hết hạn ngày ${fmtDate(exp)}. Vui lòng đào tạo lại trước ngày này.</div>`:""}
+      ${state==="expired"?`<div class="warn">Thẻ đã hết hạn từ ngày ${fmtDate(exp)}. Không được vào cổng, vui lòng đào tạo lại.</div>`:""}
+      <div class="clock" id="clock"></div>
+    </div></div>
+    ${state==="expiring"?`<button class="btn" style="background:#e07b00" onclick="retrain(cert)">Đào tạo lại ngay để gia hạn</button>`:""}
+    ${state==="expired"?`<button class="btn" style="background:var(--bad)" onclick="retrain(cert)">Đào tạo lại</button>`:""}`;
+  clearInterval(clockT);
+  const tick=()=>{const d=new Date();$("clock")&&($("clock").textContent=fmtDate(d)+"  "+d.toLocaleTimeString("vi-VN",{hour12:false}))};
+  tick(); clockT=setInterval(tick,1000);
+}
+</script>
+</body>
+</html>
