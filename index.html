@@ -54,6 +54,22 @@ input.err{border-color:var(--bad)}
 .sendbox[hidden]{display:none}
 .keep{margin-top:14px;background:#fff;border:2px dashed #9aa1ab;border-radius:16px;padding:14px;text-align:center}
 .keep[hidden]{display:none}
+.duo{display:flex;gap:10px;margin-top:14px}
+.duo .btn{flex:1;margin-top:0;padding:13px 8px;font-size:15px;line-height:1.25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;text-decoration:none}
+.duo .btn small{font-weight:600;font-size:11.5px;opacity:.85}
+.btn.okb{background:var(--ok)}
+.btn.dim{background:#b9c2cd}
+.btn .tick{display:none}.btn.done .tick{display:inline}
+.confirm{margin-top:14px;border:2px solid var(--ok);background:#f1fbf4;border-radius:14px;padding:14px}
+.confirm[hidden]{display:none}
+.confirm .duo .btn{font-size:14.5px}
+.ovl{position:fixed;inset:0;background:rgba(10,20,35,.92);z-index:50;display:flex;flex-direction:column;align-items:center;padding:calc(14px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));overflow:auto}
+.ovl[hidden]{display:none}
+.ovl img{width:min(330px,82vw);border-radius:10px;background:#fff;-webkit-touch-callout:default;user-select:auto}
+.ovl .ot{color:#fff;font-weight:700;font-size:15px;text-align:center;margin:0 0 10px;max-width:340px;line-height:1.4}
+.ovl .ot b{color:#FFD24D}
+.ovl .ob{width:min(330px,82vw)}
+.ovl .ob .btn{margin-top:10px}
 .keep .kt{font-weight:800;font-size:16px;color:#063a6e;letter-spacing:.3px}
 .keep .kq{width:min(300px,84vw);margin:10px auto 6px;display:block}
 .keep .kq svg{width:100%;height:auto;display:block}
@@ -1017,26 +1033,50 @@ body.lock{overflow:hidden}
   </div>
 </section>
 
-<!-- 7. Thẻ -->
-<section class="screen" id="s-card">
-  <div class="card sendbox" id="sendBox" hidden>
-    <h2>Bước cuối: gửi kết quả cho EHS</h2>
-    <ol class="sendsteps"><li>Bấm nút <b>Gửi kết quả cho EHS</b> bên dưới.</li><li>Trên trang biểu mẫu, <b>kéo xuống cuối và bấm "Gửi" (Submit)</b> – thông tin đã điền sẵn.</li><li>Thấy thông báo gửi thành công là xong. Bấm nút Quay lại (◀) để về thẻ.</li></ol>
-    <a class="btn" id="formsLink2" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none" onclick="return openForms2()">Gửi kết quả cho EHS</a>
-    <p class="mut" style="margin-top:10px;font-size:14px">Không quay lại được trang này: <b>quét lại mã QR → "Xem thẻ chứng nhận của tôi" → nhập số CCCD</b>. Chưa chắc đã gửi được thì bấm gửi lại – gửi 2 lần không sao.</p>
+<!-- 7. Lưu thẻ + gửi kết quả -->
+<section class="screen" id="s-save">
+  <div class="card">
+    <h2 style="margin-bottom:4px">Bước cuối: lưu thẻ và gửi kết quả</h2>
+    <p class="mut" style="font-size:14px;margin:0">Làm lần lượt 2 bước bên dưới. Xong cả 2 bước, thẻ chứng nhận sẽ hiện ra.</p>
+    <div class="keep" id="keepBox" style="margin-top:12px">
+      <div class="kt">📸 MÃ QR THẺ</div>
+      <div class="kq" id="keepQr"></div>
+      <div class="kn" id="keepName"></div>
+      <div class="kw">Ảnh này không dùng để vào cổng · chỉ mở được trên điện thoại này</div>
+    </div>
+    <div class="duo">
+      <button class="btn" id="btnKeep" onclick="saveKeepImg()"><span>① Lưu ảnh QR thẻ <span class="tick">✓</span></span><small>vào thư viện ảnh</small></button>
+      <a class="btn dim" id="formsLink2" href="#" target="_blank" rel="noopener" onclick="return openForms2()"><span>② Gửi kết quả cho EHS <span class="tick">✓</span></span><small>bấm "Gửi" (Submit)</small></a>
+    </div>
+    <p class="mut" style="font-size:13px;margin-top:10px">Ở bước ②, trang biểu mẫu mở ra với thông tin điền sẵn: <b>kéo xuống cuối, bấm "Gửi" (Submit)</b>, thấy thông báo thành công thì quay lại trang này. Không sửa ô nào trên biểu mẫu.</p>
+    <div class="confirm" id="sendConfirm" hidden>
+      <b>Anh/chị đã bấm "Gửi" (Submit) và thấy thông báo gửi thành công chưa?</b>
+      <div class="duo">
+        <button class="btn okb" onclick="confirmSent()">✓ Đã gửi thành công</button>
+        <button class="btn sec" onclick="$('formsLink2').click()">Chưa – gửi lại</button>
+      </div>
+    </div>
   </div>
+</section>
+
+<!-- 8. Thẻ -->
+<section class="screen" id="s-card">
   <div id="certBox"></div>
   <p class="hint">Xuất trình thẻ này cho bảo vệ tại cổng. Đồng hồ và dải sáng chuyển động giúp bảo vệ phân biệt thẻ thật với ảnh chụp màn hình.</p>
-  <p class="hint">Lần sau: quét lại mã QR, chọn "Xem thẻ chứng nhận của tôi" và nhập số CCCD, hoặc chọn ảnh lưu thẻ bên dưới.</p>
-  <div class="keep" id="keepBox" hidden>
-    <div class="kt">📸 ẢNH LƯU THẺ</div>
-    <div class="kq" id="keepQr"></div>
-    <div class="kn" id="keepName"></div>
-    <div class="kw">Ảnh này không dùng để vào cổng</div>
-    <div class="ks"><b>Chụp màn hình khung này</b> và giữ trong thư viện ảnh. Khi cần mở lại thẻ bằng <b>bất kỳ ứng dụng nào</b>: quét mã QR đào tạo → "Xem thẻ chứng nhận của tôi" → <b>"Mở thẻ từ ảnh đã lưu"</b> → chọn ảnh này.</div>
-  </div>
-  <button class="btn sec" onclick="go('welcome')">Về trang chính</button>
+  <p class="hint" id="keepHint">Lần sau: quét lại mã QR, chọn "Xem thẻ chứng nhận của tôi" và nhập số CCCD, hoặc mở từ ảnh QR thẻ đã lưu.</p>
+  <button class="btn sec" id="btnReKeep" onclick="saveKeepImg()" style="margin-top:6px">📸 Lưu lại ảnh QR thẻ</button>
+  <button class="btn" onclick="go('welcome')">Về trang chính</button>
 </section>
+
+<div class="ovl" id="keepOvl" hidden>
+  <p class="ot" id="keepOvlTip"></p>
+  <img id="keepImg" alt="Ảnh QR thẻ">
+  <div class="ob">
+    <button class="btn" onclick="saveAgain()">⬇ Lưu ảnh về máy</button>
+    <button class="btn okb" onclick="keepDone()">✓ Tôi đã lưu ảnh</button>
+    <p style="color:#c9d3df;font-size:12.5px;text-align:center;margin:10px 0 0">Không lưu được? Chụp màn hình trang này cũng được.</p>
+  </div>
+</div>
 
 </main>
 <div class="cam" id="cam" hidden>
@@ -1206,7 +1246,7 @@ function go(name){
   $("s-"+name).classList.add("show");
   if(name!=="slides") document.body.classList.remove("lock");
   window.scrollTo(0,0);
-  const map={welcome:0,lookup:0,register:1,slides:2,quiz:3,result:3,commit:4,send:5,card:5};
+  const map={welcome:0,lookup:0,register:1,slides:2,quiz:3,result:3,commit:4,send:5,save:5,card:5};
   setStep(map[name]);
   if(name==="slides") startSlides();
   if(name==="quiz") startQuiz();
@@ -1612,11 +1652,13 @@ function submitAll(){
   }
   // Cấp và lưu thẻ NGAY, trước khi mở Forms: lỡ kẹt ở trang Forms vẫn xem lại được thẻ bằng CCCD
   if(!saveCert(cert)) toast("Không lưu được thẻ trên điện thoại (bộ nhớ trình duyệt bị chặn)");
-  renderCert(cert); go("card");
+  showSave(cert);
 }
 function openForms2(){
   if(!CONFIG.forms.baseUrl){toast("Chưa cấu hình link Forms (chế độ chạy thử)");return false}
-  formsOpened=true; if(cert&&!cert.opened){cert.opened=true;saveCert(cert)} return true;
+  if(!keepSaved){toast("Hãy làm bước ① Lưu ảnh QR thẻ trước");return false}
+  formsOpened=true; if(cert&&!cert.opened){cert.opened=true;saveCert(cert)}
+  $("formsLink2").classList.add("done"); setTimeout(()=>{$("sendConfirm").hidden=false},800); return true;
 }
 let formsOpened=false;
 function formsUrl(){
@@ -1646,7 +1688,7 @@ function lookupCard(){
   const c=loadCerts()[v];
   if(!c){$("e_lk").innerHTML="Không tìm thấy thẻ của CCCD này trong ứng dụng đang mở.<br>Bấm <b>“Mở thẻ từ ảnh đã lưu”</b> và chọn ảnh lưu thẻ, hoặc liên hệ bảo vệ / EHS để tra cứu.";return}
   $("e_lk").textContent=""; $("lk_cccd").value="";
-  cert=c; renderCert(c); go("card");
+  cert=c; if(needSend(c)) showSave(c); else {renderCert(c); go("card")}
 }
 function retrain(c){
   [["name","f_name"],["cccd","f_cccd"],["dob","f_dob"],["unit","f_unit"],["pos","f_pos"],["phone","f_phone"]].forEach(([k,id])=>$(id).value=c[k]||"");
@@ -1662,10 +1704,10 @@ function finish(){
 /* ---- Thẻ chứng nhận ---- */
 let clockT=null;
 function renderCert(c){
+  if(!c.restored&&Date.now()<new Date(c.expiry).getTime()) setTimeout(()=>prepKeep(c),300);
   // Khung gửi kết quả hiện trong 7 ngày đầu kể từ ngày cấp thẻ (học online)
   const unsent=c.sent===false&&(Date.now()-new Date(c.issued).getTime())<7*86400000;
-  $("sendBox").hidden=!unsent;
-  if(unsent&&CONFIG.forms.baseUrl){const keep=cert;cert=c;$("formsLink2").href=formsUrl();cert=keep}
+  $("btnReKeep").hidden=!!c.restored||Date.now()>=new Date(c.expiry).getTime();
   const exp=new Date(c.expiry), valid=Date.now()<exp.getTime();
   // Trạng thái: còn hạn (xanh) · sắp hết hạn ≤ 1 tháng (cam) · hết hạn (đỏ)
   const daysLeft=Math.ceil((exp-Date.now())/86400000);
@@ -1706,37 +1748,118 @@ function renderCert(c){
 }
 /* ---- Ảnh lưu thẻ: mã QR khôi phục, mở được bằng mọi ứng dụng ---- */
 const KEEP_SALT="WANEK-EHS-VT-2026";
+// Dấu hiệu điện thoại: giống nhau ở mọi ứng dụng trên cùng máy, khác giữa các đời máy
+function devFp(){const ua=navigator.userAgent||"";const os=/iPhone|iPad|iPod/.test(ua)?"ios":/Android/.test(ua)?"and":"oth";
+  const a=Math.round(screen.width||0),b=Math.round(screen.height||0);const dpr=Math.round((window.devicePixelRatio||1)*100);
+  return h53([os,Math.min(a,b),Math.max(a,b),dpr].join("|"),3).slice(0,6)}
 function h53(str,seed=0){let a=0xdeadbeef^seed,b=0x41c6ce57^seed;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);return(4294967296*(2097151&b)+(a>>>0)).toString(36)}
 function b64u(s){return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 function ub64u(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return decodeURIComponent(escape(atob(s)))}
 const t36=d=>new Date(d).getTime().toString(36), f36=s=>new Date(parseInt(s,36)).toISOString();
+// Bỏ các đoạn APPn/COM (JFIF, EXIF, ICC của iPhone…) để ảnh nhỏ gọn trong mã QR
+function slimJpeg(b64){try{const bin=atob(b64);let o="\xFF\xD8",i=2;
+  while(i<bin.length-1){if(bin.charCodeAt(i)!==0xFF)break;const m=bin.charCodeAt(i+1);
+    if(m===0xDA){o+=bin.slice(i);return btoa(o)}
+    const len=(bin.charCodeAt(i+2)<<8)|bin.charCodeAt(i+3);
+    if(!((m>=0xE0&&m<=0xEF)||m===0xFE))o+=bin.slice(i,i+2+len);
+    i+=2+len}
+  return b64}catch(e){return b64}}
 function tinyPhoto(src,maxLen){return new Promise(res=>{if(!src)return res("");const im=new Image();im.onload=()=>{
-  for(const [w,h,q] of [[60,80,.5],[54,72,.45],[48,64,.4],[42,56,.35],[36,48,.35]]){const cv=document.createElement("canvas");cv.width=w;cv.height=h;cv.getContext("2d").drawImage(im,0,0,w,h);const u=cv.toDataURL("image/jpeg",q);if(u.length<=maxLen)return res(u.slice(23))}
-  res("")};im.onerror=()=>res("");im.src=src})}
+  let best="";
+  for(const [w,h,q] of [[60,80,.5],[54,72,.45],[48,64,.4],[42,56,.35],[36,48,.35],[36,48,.2],[30,40,.2]]){const cv=document.createElement("canvas");cv.width=w;cv.height=h;cv.getContext("2d").drawImage(im,0,0,w,h);const u=cv.toDataURL("image/jpeg",q);if(!/^data:image\/jpeg;base64,/.test(u))continue;const b=slimJpeg(u.slice(23));if(b.length<=maxLen)return res(b);if(!best||b.length<best.length)best=b}
+  res(best.length<=maxLen+500?best:"")};im.onerror=()=>res("");im.src=src})}
 async function keepPayload(c){
-  if(c._keep)return c._keep;
-  const base=[1,c.name,c.cccd,t36(c.dob),c.unit,c.pos,c.score,c.code,t36(c.issued),t36(c.expiry)];
+  if(c._k2)return c._k2;
+  const base=[2,c.name,c.cccd,t36(c.dob),c.unit,c.pos,c.score,c.code,t36(c.issued),t36(c.expiry)];
   const ph=await tinyPhoto(c.photo||c.photoThumb,1700);
-  const body=JSON.stringify(base.concat([ph]));
+  const body=JSON.stringify(base.concat([ph,devFp()]));
   const p=b64u(body)+"."+h53(body+KEEP_SALT,7);
-  c._keep=p; return p;
+  c._k2=p; return p;
 }
-function keepUrl(p){return location.origin+location.pathname+"#the="+p}
+const KEEP_BASE="https://vutuanhoang11-wq.github.io/dao-tao-van-tai/";
+function keepUrl(p){return KEEP_BASE+"#the="+p}
 function readKeep(p){
   try{const [b,s]=p.split(".");const body=ub64u(b);if(h53(body+KEEP_SALT,7)!==s)return null;
-    const a=JSON.parse(body);if(a[0]!==1)return null;
-    return {name:a[1],cccd:a[2],dob:f36(a[3]),unit:a[4],pos:a[5],score:a[6],code:a[7],issued:f36(a[8]),expiry:f36(a[9]),photo:a[10]?"data:image/jpeg;base64,"+a[10]:"",sign:"",sent:true,restored:true}
+    const a=JSON.parse(body);if(a[0]!==2)return null;
+    return {name:a[1],cccd:a[2],dob:f36(a[3]),unit:a[4],pos:a[5],score:a[6],code:a[7],issued:f36(a[8]),expiry:f36(a[9]),photo:a[10]?"data:image/jpeg;base64,"+a[10]:"",sign:"",sent:true,restored:true,fp:a[11]}
   }catch(e){return null}
 }
-async function renderKeep(c){
-  const box=$("keepBox"); if(!box)return;
-  if(Date.now()>=new Date(c.expiry).getTime()){box.hidden=true;return}
-  box.hidden=false; $("keepQr").innerHTML="";
-  const p=await keepPayload(c); const qr=qrcode(0,"L"); qr.addData(keepUrl(p),"Byte"); qr.make();
+function renderKeep(c){ // chỉ cập nhật dòng gợi ý trên trang thẻ
+  const hint=$("keepHint"); if(!hint)return;
+  hint.textContent=c.restored?"Thẻ được mở từ ảnh QR thẻ. Lần sau: quét lại mã QR → \"Xem thẻ chứng nhận của tôi\" → nhập số CCCD hoặc mở từ ảnh QR thẻ đã lưu."
+    :"Lần sau: quét lại mã QR → \"Xem thẻ chứng nhận của tôi\" → nhập số CCCD, hoặc mở từ ảnh QR thẻ đã lưu.";
+}
+let keepSaved=false, keepQrObj=null, keepBlob=null;
+function needSend(c){return c.sent===false&&!c.restored&&(Date.now()-new Date(c.issued).getTime())<7*86400000}
+async function buildKeep(c){
+  const p=await keepPayload(c); const qr=qrcode(0,"L"); qr.addData(keepUrl(p),"Byte"); qr.make(); keepQrObj=qr;
   $("keepQr").innerHTML=qr.createSvgTag({cellSize:4,margin:4,scalable:true});
   $("keepName").textContent=c.name+" · CCCD "+c.cccd+" · Hết hạn "+fmtDate(new Date(c.expiry));
+  return qr;
+}
+function showSave(c){
+  cert=c; keepSaved=!!c.keepSaved; keepBlob=null;
+  $("btnKeep").classList.toggle("done",keepSaved); $("btnKeep").classList.toggle("okb",keepSaved);
+  $("formsLink2").classList.toggle("dim",!keepSaved); $("formsLink2").classList.toggle("done",!!c.opened);
+  $("sendConfirm").hidden=!c.opened;
+  if(CONFIG.forms.baseUrl) $("formsLink2").href=formsUrl();
+  $("keepQr").innerHTML=""; keepFile=null; keepFor=null; buildKeep(c).then(()=>prepKeep(c)); go("save");
+}
+function confirmSent(){
+  cert.sent=true; saveCert(cert); renderCert(cert); go("card"); toast("Hoàn thành! Đây là thẻ chứng nhận của anh/chị.");
+}
+function wrapText(g,t,x,y,maxW,lh){const w=t.split(" ");let line="";for(const k of w){const tt=line?line+" "+k:k;if(g.measureText(tt).width>maxW&&line){g.fillText(line,x,y);y+=lh;line=k}else line=tt}if(line)g.fillText(line,x,y);return y+lh}
+async function keepCanvas(c){
+  const qr=keepQrObj&&cert===c&&$("keepQr").innerHTML?keepQrObj:await buildKeep(c);
+  const n=qr.getModuleCount(), W=900, qs=760, cs=Math.floor(qs/(n+8)), qw=cs*(n+8);
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=qw+470; const g=cv.getContext("2d");
+  g.fillStyle="#fff"; g.fillRect(0,0,cv.width,cv.height);
+  g.fillStyle="#0b5cad"; g.fillRect(0,0,W,120);
+  g.fillStyle="#fff"; g.textAlign="center"; g.font="bold 42px Arial,sans-serif"; g.fillText("MÃ QR THẺ – ĐÀO TẠO AN TOÀN",W/2,58);
+  g.font="600 28px Arial,sans-serif"; g.fillText("Nhà thầu vận tải · "+CONFIG.company+" EHS",W/2,98);
+  const ox=(W-qw)/2, oy=140; g.fillStyle="#000";
+  for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(qr.isDark(r,k))g.fillRect(ox+(k+4)*cs,oy+(r+4)*cs,cs,cs);
+  let y=oy+qw+50; g.fillStyle="#111"; g.font="bold 38px Arial,sans-serif"; y=wrapText(g,c.name,W/2,y,W-80,46);
+  g.font="30px Arial,sans-serif"; g.fillText("CCCD "+c.cccd+"   ·   Hết hạn "+fmtDate(new Date(c.expiry)),W/2,y+4); y+=60;
+  g.fillStyle="#FDECEC"; g.fillRect(60,y-36,W-120,110); g.fillStyle="#B71C1C"; g.font="bold 28px Arial,sans-serif";
+  g.fillText("Ảnh này KHÔNG dùng để vào cổng",W/2,y); g.fillText("Chỉ mở được trên điện thoại đã học",W/2,y+42); y+=110;
+  g.fillStyle="#5b6270"; g.font="24px Arial,sans-serif";
+  wrapText(g,"Mở lại thẻ: quét mã QR đào tạo → Xem thẻ chứng nhận của tôi → Mở thẻ từ ảnh đã lưu → chọn ảnh này.",W/2,y,W-100,32);
+  return cv;
+}
+let keepFile=null, keepFor=null;
+async function prepKeep(c){ // dựng sẵn ảnh để bấm là lưu ngay (trình duyệt yêu cầu thao tác trực tiếp)
+  if(keepFor===c&&keepFile)return keepFile;
+  const cv=await keepCanvas(c); keepBlob=await new Promise(r=>cv.toBlob(r,"image/png"));
+  keepFile=new File([keepBlob],"The_QR_"+c.cccd+".png",{type:"image/png"}); keepFor=c;
+  $("keepImg").src=URL.createObjectURL(keepBlob); return keepFile;
+}
+const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
+function doSaveKeep(){
+  if(!keepFile)return false;
+  const canShare=!!(navigator.canShare&&navigator.canShare({files:[keepFile]}));
+  if(isIOS&&canShare){navigator.share({files:[keepFile]}).catch(()=>{});return "share"}
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(keepBlob);a.download=keepFile.name;document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1000);return "download"}catch(e){}
+  if(canShare){navigator.share({files:[keepFile]}).catch(()=>{});return "share"}
+  return false;
+}
+async function saveKeepImg(){
+  const c=cert; if(!c)return;
+  const ready=keepFor===c&&keepFile; if(!ready) await prepKeep(c);
+  const how=ready?doSaveKeep():false;
+  $("keepOvlTip").innerHTML=how==="share"?"Chọn <b>“Lưu hình ảnh”</b> (Save Image) để lưu vào thư viện ảnh."
+    :how==="download"?"Ảnh đang được tải về máy. Nếu điện thoại hỏi, chọn <b>Tải xuống / Lưu</b>."
+    :"Bấm nút <b>Lưu ảnh về máy</b> bên dưới.";
+  $("keepOvl").hidden=false;
+}
+function saveAgain(){const how=doSaveKeep(); if(!how) $("keepOvlTip").innerHTML="Ứng dụng này không cho lưu ảnh. Hãy <b>chụp màn hình</b> trang này."; else if(how==="share") $("keepOvlTip").innerHTML="Chọn <b>“Lưu hình ảnh”</b> (Save Image) để lưu vào thư viện ảnh."}
+function keepDone(){
+  $("keepOvl").hidden=true; if(!cert)return;
+  keepSaved=true; if(!cert.keepSaved){cert.keepSaved=true;saveCert(cert)}
+  $("btnKeep").classList.add("done","okb"); $("formsLink2").classList.remove("dim");
 }
 function openKeepCert(c){
+  if(c.fp!==devFp()){cert=null;go("lookup");$("e_lk").innerHTML="Ảnh lưu thẻ này <b>thuộc điện thoại khác</b>.<br>Thẻ chỉ mở được trên <b>điện thoại đã dùng để học</b>. Liên hệ bảo vệ / EHS để tra cứu.";return}
   const old=loadCerts()[c.cccd];
   if(old&&new Date(old.issued)>new Date(c.issued)){toast("Điện thoại đã có thẻ mới hơn của CCCD này");c=old}
   else {if(old&&old.issued===c.issued&&old.photo)c=old; saveCert(c)}
@@ -1771,9 +1894,10 @@ async function onKeepFile(inp){
   $("e_lk").textContent=""; openKeepCert(c);
 }
 (function keepFromHash(){
-  const m=location.hash.match(/^#the=([A-Za-z0-9_\-]+\.[a-z0-9]+)/); if(!m)return;
-  history.replaceState(null,"",location.pathname+location.search);
-  const c=readKeep(m[1]); if(c)openKeepCert(c); else toast("Mã thẻ không hợp lệ");
+  const src=location.hash+" "+location.search+" "+decodeURIComponent(location.pathname);
+  const m=src.match(/[#?&]the=([A-Za-z0-9_\-]+\.[a-z0-9]+)/); if(!m)return;
+  history.replaceState(null,"",location.pathname);
+  const c=readKeep(m[1]); if(c)openKeepCert(c); else {go("lookup");$("e_lk").innerHTML="Ảnh lưu thẻ không hợp lệ hoặc đã cũ. Mở thẻ bằng ứng dụng đã học và chụp lại ảnh lưu thẻ."}
 })();
 </script>
 </body>
