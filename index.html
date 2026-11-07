@@ -1045,25 +1045,16 @@ body.lock{overflow:hidden}
   </div>
 </section>
 
-<!-- 7. Lưu thẻ + gửi kết quả -->
-<section class="screen" id="s-save">
-  <div class="card sendbox">
-    <h2 style="margin-bottom:4px">Bước cuối: gửi kết quả cho EHS</h2>
-    <ol class="sendsteps"><li>Bấm nút <b>Gửi kết quả cho EHS</b> bên dưới.</li><li>Trên trang biểu mẫu, <b>kéo xuống cuối và bấm "Gửi" (Submit)</b> – thông tin đã điền sẵn, không sửa ô nào.</li><li>Thấy thông báo gửi thành công thì quay lại trang này, bấm <b>"Đã gửi thành công"</b> để nhận thẻ.</li></ol>
-    <a class="btn" id="formsLink2" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none" onclick="return openForms2()">Gửi kết quả cho EHS <span class="tick">✓</span></a>
-    <div class="confirm" id="sendConfirm" hidden>
-      <b>Anh/chị đã bấm "Gửi" (Submit) và thấy thông báo gửi thành công chưa?</b>
-      <div class="duo">
-        <button class="btn okb" onclick="confirmSent()">✓ Đã gửi thành công</button>
-        <button class="btn sec" onclick="$('formsLink2').click()">Chưa – gửi lại</button>
-      </div>
-    </div>
-    <p class="mut" style="margin-top:10px;font-size:13.5px">Lỡ thoát ra: quét lại mã QR → "Xem thẻ chứng nhận của tôi" → nhập số CCCD để quay lại bước này.</p>
-  </div>
-</section>
+
 
 <!-- 8. Thẻ -->
 <section class="screen" id="s-card">
+  <div class="card sendbox" id="sendBox" hidden>
+    <h2 style="margin-bottom:4px">Bước cuối: gửi kết quả cho EHS</h2>
+    <ol class="sendsteps"><li>Bấm nút <b>Gửi kết quả cho EHS</b> bên dưới.</li><li>Trên trang biểu mẫu, <b>kéo xuống cuối và bấm "Gửi" (Submit)</b> – thông tin đã điền sẵn, không sửa ô nào.</li><li>Gửi xong, bấm link <b>"Xem lại thẻ"</b> trên trang cảm ơn (hoặc đóng trang biểu mẫu) để về thẻ.</li></ol>
+    <a class="btn" id="formsLink2" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none" onclick="return openForms2()">Gửi kết quả cho EHS</a>
+    <p class="mut" id="sendAgain" hidden style="margin-top:10px;font-size:13.5px">Đã mở biểu mẫu. Chưa bấm "Gửi" được thì bấm nút trên để gửi lại – gửi 2 lần không sao.</p>
+  </div>
   <div id="certBox"></div>
   <p class="hint">Xuất trình thẻ này cho bảo vệ tại cổng. Đồng hồ và dải sáng chuyển động giúp bảo vệ phân biệt thẻ thật với ảnh chụp màn hình.</p>
   <p class="hint">Lần sau: quét lại mã QR, chọn "Xem thẻ chứng nhận của tôi" và nhập số CCCD.</p>
@@ -1651,12 +1642,12 @@ function submitAll(){
   }
   // Cấp và lưu thẻ NGAY, trước khi mở Forms: lỡ kẹt ở trang Forms vẫn xem lại được thẻ bằng CCCD
   if(!saveCert(cert)) toast("Không lưu được thẻ trên điện thoại (bộ nhớ trình duyệt bị chặn)");
-  showSave(cert);
+  renderCert(cert); go("card");
 }
 function openForms2(){
   if(!CONFIG.forms.baseUrl){toast("Chưa cấu hình link Forms (chế độ chạy thử)");return false}
   formsOpened=true; if(cert&&!cert.opened){cert.opened=true;saveCert(cert)}
-  $("formsLink2").classList.add("done"); setTimeout(()=>{$("sendConfirm").hidden=false},800); return true;
+  $("sendAgain").hidden=false; return true;
 }
 let formsOpened=false;
 function formsUrl(){
@@ -1686,7 +1677,7 @@ function lookupCard(){
   const c=loadCerts()[v];
   if(!c){$("e_lk").innerHTML="Không tìm thấy thẻ của CCCD này trên điện thoại này.<br>Kiểm tra lại số CCCD, hoặc liên hệ bảo vệ / EHS để tra cứu.";return}
   $("e_lk").textContent=""; $("lk_cccd").value="";
-  cert=c; if(needSend(c)) showSave(c); else {renderCert(c); go("card")}
+  cert=c; renderCert(c); go("card");
 }
 function retrain(c){
   [["name","f_name"],["cccd","f_cccd"],["dob","f_dob"],["unit","f_unit"],["pos","f_pos"],["phone","f_phone"]].forEach(([k,id])=>$(id).value=c[k]||"");
@@ -1702,6 +1693,9 @@ function finish(){
 /* ---- Thẻ chứng nhận ---- */
 let clockT=null;
 function renderCert(c){
+  const unsentBox=c.sent===false&&(Date.now()-new Date(c.issued).getTime())<7*86400000;
+  $("sendBox").hidden=!unsentBox; $("sendAgain").hidden=!c.opened;
+  if(unsentBox&&CONFIG.forms.baseUrl){const keep=cert;cert=c;$("formsLink2").href=formsUrl();cert=keep}
   // Khung gửi kết quả hiện trong 7 ngày đầu kể từ ngày cấp thẻ (học online)
   const unsent=c.sent===false&&(Date.now()-new Date(c.issued).getTime())<7*86400000;
   const exp=new Date(c.expiry), valid=Date.now()<exp.getTime();
@@ -1742,19 +1736,16 @@ function renderCert(c){
   tick(); clockT=setInterval(tick,1000);
   renderKeep(c);
 }
-/* ---- Bước cuối: gửi kết quả cho EHS rồi mới hiện thẻ ---- */
 function renderKeep(c){}
-function needSend(c){return c.sent===false&&(Date.now()-new Date(c.issued).getTime())<7*86400000}
-function showSave(c){
-  cert=c;
-  $("formsLink2").classList.toggle("done",!!c.opened);
-  $("sendConfirm").hidden=!c.opened;
-  if(CONFIG.forms.baseUrl) $("formsLink2").href=formsUrl();
-  go("save");
-}
-function confirmSent(){
-  cert.sent=true; saveCert(cert); renderCert(cert); go("card"); toast("Hoàn thành! Đây là thẻ chứng nhận của anh/chị.");
-}
+/* ---- Quay về từ trang cảm ơn của Forms: ?xemthe → hiện thẻ mới nhất trên máy (đã Submit xong) ---- */
+(function(){
+  if(!/[?&]xemthe\b/.test(location.search)) return;
+  history.replaceState(null,"",location.pathname);
+  const all=Object.values(loadCerts()); if(!all.length) return;
+  const c=all.sort((a,b)=>new Date(b.issued)-new Date(a.issued))[0];
+  if(c.sent===false){c.sent=true; saveCert(c)}
+  cert=c; renderCert(c); go("card");
+})();
 </script>
 <div class="gate" id="gate" hidden><div class="gw">
   <div class="gi">🌐</div>
