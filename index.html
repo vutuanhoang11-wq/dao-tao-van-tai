@@ -1408,11 +1408,19 @@ function crop34(src){   // cắt giữa theo khung 3:4 giống khung chụp tron
 }
 async function onPhoto(inp){
   const file=inp.files&&inp.files[0]; if(!file)return; inp.value="";
-  let ori=1; try{ if(!(await EXIF_AUTO)) ori=exifOrientation(await file.slice(0,131072).arrayBuffer()) }catch(e){}
+  let ori=1, rear=false;
+  try{const head=await file.slice(0,131072).arrayBuffer();
+    if(!(await EXIF_AUTO)) ori=exifOrientation(head);
+    // iPhone ghi tên ống kính trong EXIF ("... back camera ..."): ảnh camera sau thì không lật
+    const txt=new TextDecoder("latin1").decode(new Uint8Array(head)); rear=/back (dual |triple )?camera|rear camera/i.test(txt);
+  }catch(e){}
   const url=URL.createObjectURL(file), img=new Image();
   img.onload=()=>{
     URL.revokeObjectURL(url);
-    setPhoto(crop34(drawOriented(img,ori,1200)),true);
+    // Camera trước của điện thoại hiện khung xem kiểu soi gương nhưng lưu ảnh không lật
+    // → lật lại để ảnh giống hệt lúc chụp (như khi chụp trong trang)
+    const pic=crop34(drawOriented(img,ori,1200));
+    setPhoto(rear?pic:mirrored(pic),true);
   };
   img.onerror=()=>{URL.revokeObjectURL(url);toast("Không đọc được ảnh, vui lòng chụp lại")};
   img.src=url;
