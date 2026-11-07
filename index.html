@@ -54,6 +54,8 @@ input.err{border-color:var(--bad)}
 .sendbox[hidden]{display:none}
 .keep{margin-top:14px;background:#fff;border:2px dashed #9aa1ab;border-radius:16px;padding:14px;text-align:center}
 .keep[hidden]{display:none}
+.nextstep{margin-top:12px;background:#FFF4D6;border:2px solid var(--warn);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;color:#3a2a00;text-align:center}
+.nextstep b:first-child{color:#B45309}
 .keep .btn{margin-top:12px}
 .verify{background:#E7F6EC;border:2px solid var(--ok);border-radius:14px;padding:12px 14px;margin:14px 0 0}
 .verify[hidden],#cardFoot[hidden],.ovl[hidden]{display:none}
@@ -94,7 +96,7 @@ input.err{border-color:var(--bad)}
 .ovl .ob .btn{margin-top:10px}
 .keep .kt{font-weight:800;font-size:16px;color:#063a6e;letter-spacing:.3px}
 .keep .kq{width:min(340px,86vw);margin:10px auto 6px;display:block}
-.keep .kq svg{width:100%;height:auto;display:block}
+.keep .kq svg,#qrSvg2 svg{width:100%;height:auto;display:block}
 .keep .kn{font-size:13px;color:#333;font-weight:600}
 .keep .kw{display:inline-block;margin-top:8px;background:#FDECEC;color:#B71C1C;font-weight:700;font-size:12px;padding:4px 10px;border-radius:99px}
 .keep .ks{font-size:13px;color:#5b6270;margin-top:8px;text-align:left}
@@ -1057,6 +1059,19 @@ body.lock{overflow:hidden}
 
 
 
+<!-- 7. Mã QR thẻ (ngay sau ký cam kết) -->
+<section class="screen" id="s-qr">
+  <div class="card" style="text-align:center">
+    <h2 style="margin-bottom:4px">🎉 Hoàn thành đào tạo</h2>
+    <p class="mut" style="font-size:14.5px;margin:0">Đây là <b>mã QR thẻ</b> của anh/chị. Lưu ảnh mã về máy để mở lại thẻ và đưa <b>bảo vệ quét</b> tại cổng.</p>
+    <div class="kq" id="qrSvg2" style="width:min(320px,84vw);margin:14px auto 6px"></div>
+    <div style="font-size:13px;font-weight:600;color:#333" id="qrName2"></div>
+    <button class="btn" id="btnQrSave" onclick="qrStepSave()" style="font-size:17px">⬇ Lưu ảnh</button>
+    <div class="nextstep"><b>⚠ CHƯA XONG – ĐỪNG THOÁT RA</b><br>Lưu ảnh xong, trang tự chuyển sang bước cuối: <b>Gửi kết quả cho EHS</b>. Chưa gửi kết quả thì <b>chưa có tên</b> trong danh sách vào cổng.</div>
+    <p class="mut" id="qrStepTip" hidden style="font-size:13.5px;margin-top:10px">Ứng dụng không cho tự lưu ảnh. Hãy <b>chụp màn hình</b> mã QR này, rồi bấm <a href="#" onclick="qrSaved();return false"><b>Tiếp tục</b></a>.</p>
+  </div>
+</section>
+
 <!-- 8. Thẻ -->
 <section class="screen" id="s-card">
   <div class="card sendbox" id="sendBox" hidden>
@@ -1253,7 +1268,7 @@ function go(name){
   $("s-"+name).classList.add("show");
   if(name!=="slides") document.body.classList.remove("lock");
   window.scrollTo(0,0);
-  const map={welcome:0,lookup:0,register:1,slides:2,quiz:3,result:3,commit:4,send:5,save:5,card:5};
+  const map={welcome:0,lookup:0,register:1,slides:2,quiz:3,result:3,commit:4,send:5,save:5,qr:5,card:5};
   setStep(map[name]);
   if(name==="slides") startSlides();
   if(name==="quiz") startQuiz();
@@ -1667,7 +1682,7 @@ function submitAll(){
   }
   // Cấp và lưu thẻ NGAY, trước khi mở Forms: lỡ kẹt ở trang Forms vẫn xem lại được thẻ bằng CCCD
   if(!saveCert(cert)) toast("Không lưu được thẻ trên điện thoại (bộ nhớ trình duyệt bị chặn)");
-  renderCert(cert); go("card");
+  showQrStep(cert);
 }
 function openForms2(){
   if(!CONFIG.forms.baseUrl){toast("Chưa cấu hình link Forms (chế độ chạy thử)");return false}
@@ -1800,7 +1815,8 @@ function wrapText(g,t,x,y,maxW,lh){const w=t.split(" ");let line="";for(const k 
 let keepQrObj=null, keepBlob=null, keepFile=null, keepFor=null;
 async function buildQr(c){
   const p=await keepPayload(c); const qr=qrcode(0,"L"); qr.addData(keepUrl(p),"Byte"); qr.make(); keepQrObj=qr;
-  $("qrSvg").innerHTML=qr.createSvgTag({cellSize:4,margin:4,scalable:true}); return qr;
+  const svg=qr.createSvgTag({cellSize:4,margin:4,scalable:true});
+  $("qrSvg").innerHTML=svg; if($("qrSvg2"))$("qrSvg2").innerHTML=svg; return qr;
 }
 async function keepCanvas(c){
   const qr=await buildQr(c);
@@ -1877,6 +1893,32 @@ async function onQrFile(inp){
   if(!c){$("e_lk").innerHTML=m?"<b>Mã QR thẻ KHÔNG hợp lệ</b> (đã bị sửa hoặc mã cũ).":"Không đọc được mã QR thẻ trong ảnh này.<br>Hãy chọn đúng <b>ảnh mã QR thẻ</b> đã lưu.";return}
   $("e_lk").textContent=""; cert=c; renderCert(c); go("card");
 }
+/* ---- Trang sau khi ký cam kết: lưu ảnh mã QR thẻ → tự chuyển sang gửi kết quả + thẻ real time ---- */
+function showQrStep(c){
+  cert=c; $("qrSvg2").innerHTML=""; $("qrName2").textContent=c.name+" · CCCD "+c.cccd+" · Hết hạn "+fmtDate(new Date(c.expiry));
+  const btn=$("btnQrSave"); btn.disabled=true; btn.textContent="Đang tạo mã QR thẻ…"; $("qrStepTip").hidden=true;
+  go("qr");
+  keepFor=null; prepKeep(c).then(()=>{btn.disabled=false;btn.textContent="⬇ Lưu ảnh"}).catch(()=>{btn.disabled=false;btn.textContent="⬇ Lưu ảnh"});
+}
+function qrSaved(){
+  toast("✓ Đã lưu ảnh mã QR thẻ vào máy");
+  if(cert&&!cert.qrSaved){cert.qrSaved=true;saveCert(cert)}
+  setTimeout(()=>{renderCert(cert);go("card")},600);
+}
+function qrStepSave(){
+  if(!keepFile)return;
+  const canShare=!!(navigator.canShare&&navigator.canShare({files:[keepFile]}));
+  if(isIOS&&canShare){
+    navigator.share({files:[keepFile]}).then(qrSaved).catch(e=>{
+      if(e&&e.name==="AbortError"){toast("Chưa lưu ảnh. Bấm Lưu ảnh và chọn “Lưu hình ảnh”.")}
+      else qrFallback();
+    }); return;
+  }
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(keepBlob);a.download=keepFile.name;document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1000);qrSaved();return}catch(e){}
+  if(canShare){navigator.share({files:[keepFile]}).then(qrSaved).catch(()=>{});return}
+  qrFallback();
+}
+function qrFallback(){$("qrStepTip").hidden=false;toast("Không tự lưu được – hãy chụp màn hình mã QR")}
 (function qrFromHash(){
   const src=location.hash+" "+location.search+" "+decodeURIComponent(location.pathname);
   const m=src.match(/[#?&]the=([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*\.[a-z0-9]+)/); if(!m)return;
