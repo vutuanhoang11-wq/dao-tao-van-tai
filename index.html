@@ -70,6 +70,8 @@ input.err{border-color:var(--bad)}
 .gate .btn.gh{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)}
 .gate .how{background:rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;margin-top:16px;font-size:14.5px;line-height:1.5}
 .gate .how b{color:#FFD24D}
+.gate .gnote{margin-top:12px;background:#FFD24D;color:#1b2430;border-radius:12px;padding:10px 12px;font-size:14.5px;line-height:1.45;text-align:center}
+.gate .gnote[hidden]{display:none}
 .gate .how.flash{animation:gfl 1s ease 3;outline:2px solid #FFD24D}
 @keyframes gfl{50%{background:rgba(255,210,77,.25)}}
 .gate .how ol{margin:6px 0 0;padding-left:20px}
@@ -1046,6 +1048,9 @@ body.lock{overflow:hidden}
     <input type="tel" id="lk_cccd" inputmode="numeric" maxlength="12" placeholder="12 chữ số" onkeydown="if(event.key==='Enter')lookupCard()">
     <div class="errmsg" id="e_lk"></div>
     <button class="btn" onclick="lookupCard()">Xem thẻ</button>
+    <div style="text-align:center;color:#8a909a;font-size:13px;margin:12px 0 2px">hoặc</div>
+    <label class="btn sec" style="display:block;text-align:center;cursor:pointer;margin-top:0">🖼️ Mở thẻ từ ảnh mã QR<input type="file" accept="image/*" hidden onchange="onQrFile(this)"></label>
+    <p class="mut" style="font-size:13px;margin:6px 0 0;text-align:center">Chọn ảnh <b>mã QR thẻ</b> đã lưu trong thư viện ảnh.</p>
     <button class="btn sec" onclick="go('welcome')">‹ Quay lại</button>
   </div>
 </section>
@@ -1844,6 +1849,34 @@ function renderKeep(c){
   $("verifyBar").hidden=!c.verify; $("cardFoot").hidden=!!c.verify;
   if(c.verify) $("verifyTime").textContent=new Date().toLocaleString("vi-VN",{hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit",year:"numeric"});
 }
+let jsQRp=null;
+function loadJsQR(){
+  if(window.jsQR)return Promise.resolve();
+  if(jsQRp)return jsQRp;
+  const srcs=["https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js","https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"];
+  jsQRp=new Promise((res,rej)=>{let i=0;const nx=()=>{if(i>=srcs.length){jsQRp=null;return rej()}const s=document.createElement("script");s.src=srcs[i++];s.onload=res;s.onerror=nx;document.head.appendChild(s)};nx()});
+  return jsQRp;
+}
+async function decodeImg(file){
+  const url=URL.createObjectURL(file);
+  const im=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url});
+  try{
+    if("BarcodeDetector" in window){try{const d=new BarcodeDetector({formats:["qr_code"]});const r=await d.detect(im);if(r&&r[0])return r[0].rawValue}catch(e){}}
+    await loadJsQR();
+    for(const W of [1400,1000,2000,700]){const k=Math.min(1,W/Math.max(im.width,im.height));const cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);const g=cv.getContext("2d");g.drawImage(im,0,0,cv.width,cv.height);const d=g.getImageData(0,0,cv.width,cv.height);const r=jsQR(d.data,cv.width,cv.height,{inversionAttempts:"dontInvert"});if(r&&r.data)return r.data}
+    return "";
+  }finally{URL.revokeObjectURL(url)}
+}
+async function onQrFile(inp){
+  const f=inp.files&&inp.files[0]; inp.value=""; if(!f)return;
+  $("e_lk").textContent="Đang đọc ảnh…";
+  let txt="";
+  try{txt=await decodeImg(f)}catch(e){$("e_lk").innerHTML="Không tải được bộ đọc mã. Kiểm tra kết nối mạng rồi thử lại.";return}
+  const m=String(txt).match(/[#?&]the=([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*\.[a-z0-9]+)/);
+  const c=m&&readKeep(m[1]);
+  if(!c){$("e_lk").innerHTML=m?"<b>Mã QR thẻ KHÔNG hợp lệ</b> (đã bị sửa hoặc mã cũ).":"Không đọc được mã QR thẻ trong ảnh này.<br>Hãy chọn đúng <b>ảnh mã QR thẻ</b> đã lưu.";return}
+  $("e_lk").textContent=""; cert=c; renderCert(c); go("card");
+}
 (function qrFromHash(){
   const src=location.hash+" "+location.search+" "+decodeURIComponent(location.pathname);
   const m=src.match(/[#?&]the=([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*\.[a-z0-9]+)/); if(!m)return;
@@ -1875,6 +1908,7 @@ function renderKeep(c){
   <h2>Mở bằng <span class="gBr">trình duyệt</span> của điện thoại</h2>
   <p>Để thẻ chứng nhận luôn được lưu ở <b>một chỗ</b> và xem lại được mỗi lần vào cổng, trang đào tạo chỉ chạy trên <b class="gBr">trình duyệt</b> của điện thoại.</p>
   <button class="btn wh" onclick="goMainBrowser(true)">Mở bằng <span class="gBr">trình duyệt</span></button>
+  <div class="gnote" id="gateAsk" hidden>Nếu <b id="gateApp">ứng dụng</b> hỏi <i>“Bạn sẽ thoát … và mở một ứng dụng khác”</i> → bấm <b>Tiếp tục</b> để mở <b class="gBr">trình duyệt</b>.</div>
   <div class="how" id="gateHow"></div>
   <button class="btn gh" onclick="copyGateUrl()">📋 Sao chép đường dẫn</button>
   <div class="url" id="gateUrl"></div>
@@ -1889,7 +1923,9 @@ function renderKeep(c){
   // Android: mọi thứ không phải Chrome (Zalo, Facebook, Samsung Internet, Cốc Cốc…) → chuyển sang Chrome
   const andNotChrome=and&&(!!IN_APP||/; wv\)|SamsungBrowser|Firefox|OPR\/|EdgA|UCBrowser|YaBrowser|coc_coc|CocCoc|MiuiBrowser|HeyTapBrowser|Version\/\d/i.test(ua)||!/Chrome\//.test(ua));
   if(!(iosNotSafari||andNotChrome)) return;
-  const url=location.href;
+  // bỏ các tham số Zalo/Facebook tự thêm (zarsrc, utm_…, fbclid) cho đường dẫn gọn
+  const U=new URL(location.href); [...U.searchParams.keys()].forEach(k=>{if(/^(zarsrc|utm_|fbclid|gclid)/i.test(k))U.searchParams.delete(k)});
+  const url=U.toString();
   window.goMainBrowser=function(manual){
     if(ios) location.href="x-safari-"+url;
     else location.href="intent://"+url.replace(/^https?:\/\//,"")+"#Intent;scheme=https;package=com.android.chrome;end";
@@ -1906,6 +1942,7 @@ function renderKeep(c){
     ? `Không tự mở được? Trong <b>${app}</b>:<ol><li>Bấm nút <b>⋯</b> hoặc <b>⋮</b> ở góc trên bên phải.</li><li>Chọn <b>“Mở bằng trình duyệt”</b> / <b>“Mở trong ${BR}”</b>.</li></ol>`
     : `Không tự mở được? Mở ứng dụng <b>${BR}</b>, dán đường dẫn bên dưới vào ô địa chỉ.`;
   $("gateUrl").textContent=url;
+  if(IN_APP){$("gateApp").textContent=IN_APP;$("gateAsk").hidden=false}
   $("gate").hidden=false; document.body.style.overflow="hidden";
   try{if(!sessionStorage.getItem("gateTried")){sessionStorage.setItem("gateTried","1");setTimeout(()=>goMainBrowser(false),400)}}catch(e){setTimeout(()=>goMainBrowser(false),400)}
 })();
