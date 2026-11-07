@@ -1686,6 +1686,7 @@ function submitAll(){
 }
 function openForms2(){
   if(!CONFIG.forms.baseUrl){toast("Chưa cấu hình link Forms (chế độ chạy thử)");return false}
+  if(cert&&!cert.qrSaved){toast("Hãy lưu ảnh mã QR thẻ trước khi gửi kết quả");showQrStep(cert);return false}
   formsOpened=true; if(cert&&!cert.opened){cert.opened=true;saveCert(cert)}
   $("sendAgain").hidden=false; return true;
 }
@@ -1717,6 +1718,7 @@ function lookupCard(){
   const c=loadCerts()[v];
   if(!c){$("e_lk").innerHTML="Không tìm thấy thẻ của CCCD này trên điện thoại này.<br>Kiểm tra lại số CCCD, hoặc liên hệ bảo vệ / EHS để tra cứu.";return}
   $("e_lk").textContent=""; $("lk_cccd").value="";
+  if(c.sent===false&&!c.qrSaved&&(Date.now()-new Date(c.issued).getTime())<7*86400000){showQrStep(c);return}
   cert=c; renderCert(c); go("card");
 }
 function retrain(c){
@@ -1919,13 +1921,21 @@ function qrStepSave(){
   qrFallback();
 }
 function qrFallback(){$("qrStepTip").hidden=false;toast("Không tự lưu được – hãy chụp màn hình mã QR")}
-(function qrFromHash(){
+// Mỗi lần quét mã QR thẻ: luôn hiện đúng thẻ của mã vừa quét (kể cả khi Safari/Chrome dùng lại tab cũ)
+function qrFromHash(){
   const src=location.hash+" "+location.search+" "+decodeURIComponent(location.pathname);
-  const m=src.match(/[#?&]the=([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*\.[a-z0-9]+)/); if(!m)return;
+  const m=src.match(/[#?&]the=([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*\.[a-z0-9]+)/); if(!m)return false;
+  clearInterval(clockT); cert=null; $("certBox").innerHTML="";
   const c=readKeep(m[1]);
-  if(!c){go("lookup");$("e_lk").innerHTML="<b>Mã QR thẻ KHÔNG hợp lệ</b> (đã bị sửa hoặc mã cũ). Tra CCCD trong danh sách để kiểm tra.";return}
-  cert=c; renderCert(c); go("card");
-})();
+  if(!c){go("lookup");$("e_lk").innerHTML="<b>Mã QR thẻ KHÔNG hợp lệ</b> (đã bị sửa hoặc mã cũ). Tra CCCD trong danh sách để kiểm tra.";}
+  else {cert=c; renderCert(c); go("card");}
+  // xoá mã khỏi thanh địa chỉ (trừ khi đang chờ chuyển sang Safari/Chrome) → lần quét sau luôn được nhận là mã mới
+  setTimeout(()=>{if($("gate").hidden&&/the=/.test(location.href))history.replaceState(null,"",location.pathname)},0);
+  return true;
+}
+qrFromHash();
+window.addEventListener("hashchange",qrFromHash);
+window.addEventListener("pageshow",e=>{if(e.persisted)qrFromHash()});
 /* ---- Quay về từ trang cảm ơn của Forms: ?xemthe → hiện thẻ mới nhất trên máy (đã Submit xong) ---- */
 (function(){
   if(!/[?&]xemthe\b/.test(location.search)) return;
