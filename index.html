@@ -1608,15 +1608,17 @@ function qStart(){
   qTick=setInterval(()=>{
     if(!$("s-quiz").classList.contains("show")){qStop();return}
     const rem=Math.max(0,qRem0-(Date.now()-qShownAt)); qLeft[i]=rem; qPaint(rem);
-    if(rem<=0){qStop(); if(answers[i]===null) quizTimeout(); else {toast("Hết giờ câu "+(i+1));quizMove(1)}}
+    // hết giờ: chưa chọn hoặc chọn SAI → không đạt; chọn ĐÚNG → tự chuyển câu tiếp
+    if(rem<=0){qStop(); const right=answers[i]!==null&&answers[i]===QUIZ[quizOrder[i].qi].a;
+      if(!right) quizTimeout(answers[i]===null?"chưa được trả lời":"trả lời sai"); else quizMove(1)}
   },250);
 }
 function qSave(){if(qTick){qLeft[quizIdx]=Math.max(0,qRem0-(Date.now()-qShownAt))}qStop()}
-function quizTimeout(){
+function quizTimeout(why){
   qStop(); score=0;
   $("resultCard").innerHTML=`<h2 style="text-align:center">⏰ Hết thời gian</h2>
     <div class="score bad">KHÔNG ĐẠT</div>
-    <p class="mut" style="text-align:center">Câu ${quizIdx+1} chưa được trả lời trong ${fmtSec(CONFIG.qSeconds)}. Bài kiểm tra được tính là <b>không đạt</b>.</p>
+    <p class="mut" style="text-align:center">Câu ${quizIdx+1} hết thời gian ${fmtSec(CONFIG.qSeconds)} và ${why||"chưa được trả lời"}. Bài kiểm tra được tính là <b>không đạt</b>.</p>
     <button class="btn" onclick="go('quiz')">↺ Quay lại làm bài từ đầu</button>
     <button class="btn sec" onclick="slideIdx=0;go('slides')">Xem lại nội dung</button>`;
   go("result");
