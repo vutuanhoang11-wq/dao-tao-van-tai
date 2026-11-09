@@ -397,6 +397,15 @@ body.lock{overflow:hidden}
 .opt input{margin-top:4px;transform:scale(1.2)}
 .opt.sel{border-color:var(--pri);background:#eef5fd}
 .qnav{font-size:14px;color:var(--mut);text-align:center;margin-top:6px}
+.qhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.qtimer{flex:none;display:flex;align-items:center;gap:6px;border-radius:999px;padding:6px 12px;background:#E8F1FB;color:#0b5cad;font-weight:800;font-size:18px;font-variant-numeric:tabular-nums;border:2px solid #b9d3f0}
+.qtimer.warn{background:#FFF1DC;color:#B45309;border-color:#F4B860}
+.qtimer.danger{background:#FDECEC;color:#B71C1C;border-color:#F26B6B;animation:qpulse 1s ease-in-out infinite}
+@keyframes qpulse{50%{transform:scale(1.07)}}
+.qbar{height:5px;border-radius:5px;background:#e3e8ef;margin:8px 0 2px;overflow:hidden}
+.qbar i{display:block;height:100%;background:#0b5cad;transform-origin:left;transition:background .3s}
+.qbar.warn i{background:#E07B00}.qbar.danger i{background:#D32F2F}
+.opt.lock{opacity:.6;pointer-events:none}
 .score{font-size:46px;font-weight:800;text-align:center}
 .score.ok{color:var(--ok)} .score.bad{color:var(--bad)}
 .review{font-size:14px;margin-top:8px}
@@ -1000,8 +1009,10 @@ body.lock{overflow:hidden}
 <!-- 3. Quiz -->
 <section class="screen" id="s-quiz">
   <div class="card">
-    <h2>Bài kiểm tra</h2>
-    <p class="mut">Cần đúng <b id="qPass"></b>/<b id="qTotal"></b> câu để đạt.</p>
+    <div class="qhead"><div><h2 style="margin-bottom:2px">Bài kiểm tra</h2>
+    <p class="mut" style="margin:0">Cần đúng <b id="qPass"></b>/<b id="qTotal"></b> câu để đạt. Mỗi câu tối đa <b id="qSec"></b>.</p></div>
+    <div class="qtimer" id="qTimer">⏱ <span id="qTime">1:30</span></div></div>
+    <div class="qbar" id="qBar"><i id="qBarFill"></i></div>
     <div id="quizBody" style="margin-top:10px"></div>
     <div class="qnav" id="qnav"></div>
     <div class="row">
@@ -1122,6 +1133,7 @@ const CONFIG = {
   cardCourse: "Đào tạo an toàn vận tải",   // dòng tên khóa in trên thẻ
   certPrefix: "WN-VT",
   passScore: 8,             // số câu đúng tối thiểu
+  qSeconds: 90,             // thời gian tối đa cho mỗi câu hỏi (giây) – hết giờ mà chưa trả lời: KHÔNG ĐẠT
   validMonths: 6,           // hiệu lực thẻ (tháng)
   warnMonths: 1,            // cảnh báo màu cam khi còn ≤ 1 tháng
   quizCount: 10,            // số câu mỗi lần làm bài (lấy từ ngân hàng 25 câu)
@@ -1272,6 +1284,7 @@ function go(name){
   const map={welcome:0,lookup:0,register:1,slides:2,quiz:3,result:3,commit:4,send:5,save:5,qr:5,card:5};
   setStep(map[name]);
   if(name==="slides") startSlides();
+  if(name!=="quiz") qStop();
   if(name==="quiz") startQuiz();
   if(name==="commit") initCommit();
 }
@@ -1284,6 +1297,7 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",
   $("hdTitle").textContent=CONFIG.course; $("hdCo").textContent=CONFIG.company;
   $("wPass").textContent=CONFIG.passScore+"/"+CONFIG.quizCount; $("wValid").textContent=CONFIG.validMonths;
   $("qPass").textContent=CONFIG.passScore; $("qTotal").textContent=CONFIG.quizCount;
+  $("qSec").textContent=fmtSec(CONFIG.qSeconds);
   // chuyển thẻ từ bản cũ sang kho mới
   try{const o=JSON.parse(localStorage.getItem(OLD_KEY)||"null");if(o&&o.cccd){saveCert(o);localStorage.removeItem(OLD_KEY)}}catch(e){}
   setStep(0);
@@ -1553,15 +1567,17 @@ function slideMove(d){
 /* ---- Quiz ---- */
 /* Chọn đề: mỗi nhóm nội dung 1 câu, phần còn lại lấy ngẫu nhiên từ các câu chưa chọn;
    tránh lặp lại đề vừa làm khi làm lại */
-let lastSet=[];
+// đề vừa làm được nhớ cả khi tải lại trang → lần làm lại luôn ra 10 câu khác
+let lastSet=(()=>{try{return JSON.parse(localStorage.getItem("vt_lastSet")||"[]")}catch(e){return []}})();
 function pickQuestions(){
   const n=Math.min(CONFIG.quizCount,QUIZ_BANK.length);
   // ưu tiên câu chưa có trong đề vừa làm, câu đã có xếp sau
   const order=arr=>shuffle(arr).sort((x,y)=>lastSet.includes(x.id)-lastSet.includes(y.id));
   const groups=shuffle([...new Set(QUIZ_BANK.map(q=>q.g))]).slice(0,n);
-  let pick=groups.map(g=>order(QUIZ_BANK.filter(q=>q.g===g))[0]);
+  // mỗi nhóm nội dung 1 câu CHƯA có trong đề vừa làm (nhóm nào hết câu mới thì bù bằng câu mới nhóm khác)
+  let pick=groups.map(g=>order(QUIZ_BANK.filter(q=>q.g===g&&!lastSet.includes(q.id)))[0]).filter(Boolean);
   pick=pick.concat(order(QUIZ_BANK.filter(q=>!pick.includes(q))).slice(0,n-pick.length));
-  lastSet=pick.map(q=>q.id);
+  lastSet=pick.map(q=>q.id); try{localStorage.setItem("vt_lastSet",JSON.stringify(lastSet))}catch(e){}
   return shuffle(pick);
 }
 let QUIZ=[];
@@ -1572,26 +1588,60 @@ function startQuiz(){
     if(Q.keepLast){tail=[idx.pop()]}
     return {qi,opts:(CONFIG.shuffleOptions?shuffle(idx):idx).concat(tail)};
   });
-  answers=quizOrder.map(()=>null); quizIdx=0; renderQuiz();
+  answers=quizOrder.map(()=>null); quizIdx=0;
+  qLeft=quizOrder.map(()=>CONFIG.qSeconds*1000); renderQuiz();
 }
-function renderQuiz(){
-  const it=quizOrder[quizIdx], Q=QUIZ[it.qi];
+/* ---- Đồng hồ đếm ngược từng câu ---- */
+var qLeft=[], qTick=null, qShownAt=0, qRem0=0;
+function fmtSec(t){t=Math.max(0,Math.ceil(t));return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function qStop(){clearInterval(qTick);qTick=null}
+function qPaint(ms){
+  const t=ms/1000, f=Math.max(0,Math.min(1,ms/(CONFIG.qSeconds*1000)));
+  $("qTime").textContent=fmtSec(t);
+  const cls=t<=10?"danger":t<=30?"warn":"";
+  $("qTimer").className="qtimer "+cls; $("qBar").className="qbar "+cls;
+  $("qBarFill").style.transform="scaleX("+f+")";
+}
+function qStart(){
+  qStop(); const i=quizIdx; qRem0=qLeft[i]; qShownAt=Date.now(); qPaint(qRem0);
+  if(qRem0<=0)return;
+  qTick=setInterval(()=>{
+    if(!$("s-quiz").classList.contains("show")){qStop();return}
+    const rem=Math.max(0,qRem0-(Date.now()-qShownAt)); qLeft[i]=rem; qPaint(rem);
+    if(rem<=0){qStop(); if(answers[i]===null) quizTimeout(); else {toast("Hết giờ câu "+(i+1));quizMove(1)}}
+  },250);
+}
+function qSave(){if(qTick){qLeft[quizIdx]=Math.max(0,qRem0-(Date.now()-qShownAt))}qStop()}
+function quizTimeout(){
+  qStop(); score=0;
+  $("resultCard").innerHTML=`<h2 style="text-align:center">⏰ Hết thời gian</h2>
+    <div class="score bad">KHÔNG ĐẠT</div>
+    <p class="mut" style="text-align:center">Câu ${quizIdx+1} chưa được trả lời trong ${fmtSec(CONFIG.qSeconds)}. Bài kiểm tra được tính là <b>không đạt</b>.</p>
+    <button class="btn" onclick="go('quiz')">↺ Quay lại làm bài từ đầu</button>
+    <button class="btn sec" onclick="slideIdx=0;go('slides')">Xem lại nội dung</button>`;
+  go("result");
+}
+function renderQuiz(keepTimer){
+  const it=quizOrder[quizIdx], Q=QUIZ[it.qi], lock=qLeft[quizIdx]<=0;
   $("quizBody").innerHTML=`<div class="q"><div class="qt">Câu ${quizIdx+1}. ${esc(Q.q)}</div>${
-    it.opts.map(oi=>`<label class="opt ${answers[quizIdx]===oi?"sel":""}"><input type="radio" name="qa" ${answers[quizIdx]===oi?"checked":""} onchange="pick(${oi})"><span>${esc(Q.o[oi])}</span></label>`).join("")}</div>`;
+    it.opts.map(oi=>`<label class="opt ${answers[quizIdx]===oi?"sel":""} ${lock?"lock":""}"><input type="radio" name="qa" ${answers[quizIdx]===oi?"checked":""} ${lock?"disabled":""} onchange="pick(${oi})"><span>${esc(Q.o[oi])}</span></label>`).join("")}</div>`;
   const done=answers.filter(a=>a!==null).length;
   $("qnav").textContent=`Đã trả lời ${done}/${QUIZ.length}`;
   $("qPrev").disabled=quizIdx===0;
   const last=quizIdx===quizOrder.length-1;
   $("qNext").textContent=last?"Nộp bài":"Câu tiếp ›";
   $("qNext").disabled=answers[quizIdx]===null;
+  if(!keepTimer) qStart();
 }
-function pick(oi){answers[quizIdx]=oi;renderQuiz()}
+function pick(oi){if(qLeft[quizIdx]<=0)return;answers[quizIdx]=oi;renderQuiz(true)}
 function quizMove(d){
+  qSave();
   if(d>0&&quizIdx===quizOrder.length-1){gradeQuiz();return}
   quizIdx=Math.max(0,Math.min(quizOrder.length-1,quizIdx+d)); renderQuiz();
 }
 function gradeQuiz(){
-  if(answers.some(a=>a===null)){toast("Vui lòng trả lời tất cả câu hỏi");return}
+  qStop();
+  if(answers.some(a=>a===null)){toast("Vui lòng trả lời tất cả câu hỏi");renderQuiz();return}
   score=quizOrder.reduce((s,it,i)=>s+(answers[i]===QUIZ[it.qi].a?1:0),0);
   const pass=score>=CONFIG.passScore;
   let html=`<h2 style="text-align:center">${pass?"Chúc mừng! Anh/chị đã ĐẠT":"Chưa đạt yêu cầu"}</h2>
