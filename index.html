@@ -1826,21 +1826,46 @@ async function buildQr(c){
   const svg=qr.createSvgTag({cellSize:4,margin:4,scalable:true});
   $("qrSvg").innerHTML=svg; if($("qrSvg2"))$("qrSvg2").innerHTML=svg; return qr;
 }
+// Ảnh mã QR thẻ lưu về máy: 1200px, ảnh chân dung GỐC (nét) + mã QR lớn, sắc cạnh
+const KW=1200, KP={x:60,y:190,w:300,h:400};
+function loadImg(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src})}
+function drawCover(g,im,x,y,w,h){const r=Math.max(w/im.width,h/im.height),sw=w/r,sh=h/r;g.drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,x,y,w,h)}
 async function keepCanvas(c){
   const qr=await buildQr(c);
-  const n=qr.getModuleCount(), W=900, qs=760, cs=Math.floor(qs/(n+8)), qw=cs*(n+8);
-  const cv=document.createElement("canvas"); cv.width=W; cv.height=qw+400; const g=cv.getContext("2d");
-  g.fillStyle="#fff"; g.fillRect(0,0,cv.width,cv.height);
-  g.fillStyle="#0b5cad"; g.fillRect(0,0,W,120);
-  g.fillStyle="#fff"; g.textAlign="center"; g.font="bold 42px Arial,sans-serif"; g.fillText("MÃ QR THẺ – ĐÀO TẠO AN TOÀN",W/2,58);
-  g.font="600 28px Arial,sans-serif"; g.fillText("Nhân viên vận tải · "+CONFIG.company+" EHS",W/2,98);
-  const ox=(W-qw)/2, oy=140; g.fillStyle="#000";
+  const n=qr.getModuleCount(), W=KW, cs=Math.floor(1060/(n+8)), qw=cs*(n+8);
+  const lines=[["CCCD",c.cccd],["Đơn vị",c.unit],["Chức vụ",c.pos],["Hết hạn",fmtDate(new Date(c.expiry))]];
+  const cv=document.createElement("canvas"); const g=cv.getContext("2d");
+  g.font="bold 52px Arial,sans-serif"; const nameLines=Math.ceil(g.measureText(c.name).width/(W-120));
+  const oy=150+60+nameLines*62+lines.length*50+30;
+  cv.width=W; cv.height=oy+qw+190;
+  g.fillStyle="#fff"; g.fillRect(0,0,W,cv.height);
+  g.fillStyle="#0b5cad"; g.fillRect(0,0,W,150);
+  g.fillStyle="#fff"; g.textAlign="center"; g.font="bold 54px Arial,sans-serif"; g.fillText("MÃ QR THẺ – ĐÀO TẠO AN TOÀN",W/2,74);
+  g.font="600 34px Arial,sans-serif"; g.fillText("Nhân viên vận tải · "+CONFIG.company+" EHS",W/2,122);
+  let y=150+62; g.fillStyle="#111"; g.font="bold 52px Arial,sans-serif"; y=wrapText(g,c.name,W/2,y,W-120,62);
+  for(const [k,v] of lines){g.font=(k==="Hết hạn"?"bold ":"")+"34px Arial,sans-serif";g.fillStyle=k==="Hết hạn"?"#111":"#333";g.fillText(k+": "+String(v||""),W/2,y);y+=50}
+  // mã QR: mỗi ô vuông đúng số nguyên điểm ảnh → sắc nét khi phóng to
+  const ox=Math.round((W-qw)/2); g.fillStyle="#000";
   for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(qr.isDark(r,k))g.fillRect(ox+(k+4)*cs,oy+(r+4)*cs,cs,cs);
-  let y=oy+qw+50; g.fillStyle="#111"; g.font="bold 38px Arial,sans-serif"; y=wrapText(g,c.name,W/2,y,W-80,46);
-  g.font="30px Arial,sans-serif"; g.fillText("CCCD "+c.cccd+"   ·   Hết hạn "+fmtDate(new Date(c.expiry)),W/2,y+4); y+=64;
-  g.fillStyle="#E8F1FB"; g.fillRect(60,y-38,W-120,100); g.fillStyle="#073f78"; g.font="bold 27px Arial,sans-serif";
-  g.fillText("Quét bằng camera, Zalo hoặc Google Camera",W/2,y); g.fillText("để xem thẻ chứng nhận",W/2,y+40);
+  const yb=oy+qw+40;
+  g.fillStyle="#E8F1FB"; g.fillRect(60,yb,W-120,110); g.fillStyle="#073f78"; g.font="bold 36px Arial,sans-serif";
+  g.fillText("Quét bằng camera, Zalo hoặc Google Camera",W/2,yb+48); g.fillText("để xem thẻ chứng nhận",W/2,yb+94);
   return cv;
+}
+function wrapText2(g,t,x,y,maxW,lh){const w=String(t).split(" ");let line="";for(const k of w){const tt=line?line+" "+k:k;if(g.measureText(tt).width>maxW&&line){g.fillText(line,x,y);y+=lh;line=k}else line=tt}if(line)g.fillText(line,x,y);return y+lh}
+// Mở từ ảnh mã QR đã lưu: lấy lại ảnh chân dung NÉT trong ảnh, chỉ dùng khi khớp với ảnh nhỏ (có chữ ký) trong mã QR
+async function sharpFromKeepImg(im,c){
+  try{
+    if(im.width!==KW||im.height<KP.y+KP.h||!c.photo)return "";
+    const cv=document.createElement("canvas");cv.width=KP.w;cv.height=KP.h;cv.getContext("2d").drawImage(im,KP.x,KP.y,KP.w,KP.h,0,0,KP.w,KP.h);
+    const sharp=cv.toDataURL("image/jpeg",.9);
+    const tiny=await loadImg(c.photo);
+    const sig=(img,crop)=>{const t=document.createElement("canvas");t.width=12;t.height=16;const g=t.getContext("2d");
+      if(crop)g.drawImage(img,img.width*.1,img.height*.04,img.width*.8,img.height*.8,0,0,12,16);else g.drawImage(img,0,0,12,16);return g.getImageData(0,0,12,16).data};
+    const a=sig(cv,true), b=sig(tiny,false); let d=0; for(let i=0;i<a.length;i+=4)d+=Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2]);
+    d/= (a.length/4)*3;
+    return d<22?sharp:"";
+  }catch(e){return ""}
 }
 async function prepKeep(c){ // dựng sẵn ảnh để bấm là lưu ngay (trình duyệt yêu cầu thao tác trực tiếp)
   if(keepFor===c&&keepFile)return keepFile;
@@ -1879,10 +1904,12 @@ function loadJsQR(){
   jsQRp=new Promise((res,rej)=>{let i=0;const nx=()=>{if(i>=srcs.length){jsQRp=null;return rej()}const s=document.createElement("script");s.src=srcs[i++];s.onload=res;s.onerror=nx;document.head.appendChild(s)};nx()});
   return jsQRp;
 }
+let lastImg=null;
 async function decodeImg(file){
   const url=URL.createObjectURL(file);
   const im=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url});
   try{
+    lastImg=im;
     if("BarcodeDetector" in window){try{const d=new BarcodeDetector({formats:["qr_code"]});const r=await d.detect(im);if(r&&r[0])return r[0].rawValue}catch(e){}}
     await loadJsQR();
     for(const W of [1400,1000,2000,700]){const k=Math.min(1,W/Math.max(im.width,im.height));const cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);const g=cv.getContext("2d");g.drawImage(im,0,0,cv.width,cv.height);const d=g.getImageData(0,0,cv.width,cv.height);const r=jsQR(d.data,cv.width,cv.height,{inversionAttempts:"dontInvert"});if(r&&r.data)return r.data}
@@ -1897,7 +1924,7 @@ async function onQrFile(inp){
   const m=String(txt).match(/[#?&]the=([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*\.[a-z0-9]+)/);
   const c=m&&readKeep(m[1]);
   if(!c){$("e_lk").innerHTML=m?"<b>Mã QR thẻ KHÔNG hợp lệ</b> (đã bị sửa hoặc mã cũ).":"Không đọc được mã QR thẻ trong ảnh này.<br>Hãy chọn đúng <b>ảnh mã QR thẻ</b> đã lưu.";return}
-  $("e_lk").textContent=""; cert=c; renderCert(c); go("card");
+  $("e_lk").textContent=""; cert=localOf(c)||c; renderCert(cert); go("card");
 }
 /* ---- Trang sau khi ký cam kết: lưu ảnh mã QR thẻ → tự chuyển sang gửi kết quả + thẻ real time ---- */
 function showQrStep(c){
@@ -1926,13 +1953,15 @@ function qrStepSave(){
 }
 function qrFallback(){$("qrStepTip").hidden=false;toast("Không tự lưu được – hãy chụp màn hình mã QR")}
 // Mỗi lần quét mã QR thẻ: luôn hiện đúng thẻ của mã vừa quét (kể cả khi Safari/Chrome dùng lại tab cũ)
+// Mã QR thẻ mở trên CHÍNH điện thoại đã học → dùng thẻ gốc lưu trên máy (ảnh chân dung nét, chữ ký…)
+function localOf(c){const l=c&&loadCerts()[c.cccd];return l&&l.code===c.code&&new Date(l.issued).getTime()===new Date(c.issued).getTime()?l:null}
 function qrFromHash(){
   const src=location.hash+" "+location.search+" "+decodeURIComponent(location.pathname);
   const m=src.match(/[#?&]the=([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*\.[a-z0-9]+)/); if(!m)return false;
   clearInterval(clockT); cert=null; $("certBox").innerHTML="";
   const c=readKeep(m[1]);
   if(!c){go("lookup");$("e_lk").innerHTML="<b>Mã QR thẻ KHÔNG hợp lệ</b> (đã bị sửa hoặc mã cũ). Tra CCCD trong danh sách để kiểm tra.";}
-  else {cert=c; renderCert(c); go("card");}
+  else {cert=localOf(c)||c; renderCert(cert); go("card");}
   // xoá mã khỏi thanh địa chỉ (trừ khi đang chờ chuyển sang Safari/Chrome) → lần quét sau luôn được nhận là mã mới
   setTimeout(()=>{if($("gate").hidden&&/the=/.test(location.href))history.replaceState(null,"",location.pathname)},0);
   return true;
