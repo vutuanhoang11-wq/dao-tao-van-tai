@@ -54,6 +54,7 @@ input.err{border-color:var(--bad)}
 .sendbox[hidden]{display:none}
 .keep{margin-top:14px;background:#fff;border:2px dashed #9aa1ab;border-radius:16px;padding:14px;text-align:center}
 .keep[hidden]{display:none}
+#scanCover[hidden]{display:none!important}
 .nextstep{margin-top:12px;background:#FFF4D6;border:2px solid var(--warn);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;color:#3a2a00;text-align:center}
 .nextstep b:first-child{color:#B45309}
 .keep .btn{margin-top:12px}
@@ -1968,7 +1969,13 @@ function qrFromHash(){
 }
 qrFromHash();
 window.addEventListener("hashchange",qrFromHash);
-window.addEventListener("pageshow",e=>{if(e.persisted)qrFromHash()});
+// Máy bảo vệ: rời trang (mở camera quét người tiếp theo) → che thẻ đang xem, để lúc mở trang lại
+// không bao giờ thấy thông tin của người quét trước trong lúc đang tải
+function coverScan(on){$("scanCover").hidden=!on}
+function onHide(){if(cert&&cert.verify){coverScan(true);clearInterval(clockT);$("certBox").innerHTML=""}}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)onHide();else setTimeout(()=>{if(!qrFromHash()&&cert&&cert.verify)renderCert(cert);coverScan(false)},150)});
+window.addEventListener("pagehide",onHide);
+window.addEventListener("pageshow",e=>{if(e.persisted){if(!qrFromHash()&&cert&&cert.verify)renderCert(cert);coverScan(false)}});
 /* ---- Quay về từ trang cảm ơn của Forms: ?xemthe → hiện thẻ mới nhất trên máy (đã Submit xong) ---- */
 (function(){
   if(!/[?&]xemthe\b/.test(location.search)) return;
@@ -1979,6 +1986,7 @@ window.addEventListener("pageshow",e=>{if(e.persisted)qrFromHash()});
   cert=c; renderCert(c); go("card");
 })();
 </script>
+<div id="scanCover" hidden style="position:fixed;inset:0;z-index:90;background:#eef2f6;display:flex;align-items:center;justify-content:center;font:600 16px/1.4 system-ui,sans-serif;color:#5b6270">Đang mở thẻ…</div>
 <div class="ovl" id="keepOvl" hidden>
   <p class="ot" id="keepOvlTip"></p>
   <img id="keepImg" alt="Ảnh mã QR thẻ">
