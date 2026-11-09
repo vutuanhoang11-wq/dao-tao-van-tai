@@ -61,23 +61,23 @@ input.err{border-color:var(--bad)}
 .verify[hidden],#cardFoot[hidden],.ovl[hidden]{display:none}
 .verify .vt{color:var(--ok);font-weight:800;font-size:17px}
 .verify .vs{font-size:13.5px;color:#234;margin-top:4px;line-height:1.45}
-.gate{position:fixed;inset:0;z-index:100;background:#0b2f57;color:#fff;overflow:auto;padding:calc(24px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
-.gate[hidden],.gate [hidden]{display:none!important}
-.gate .gw{max-width:440px;margin:0 auto}
-.gate .gi{font-size:46px;text-align:center;margin:6px 0 4px}
-.gate h2{color:#fff;text-align:center;font-size:21px;margin:0 0 8px}
-.gate p{color:#d7e3f1;font-size:15px;line-height:1.5;margin:0 0 12px;text-align:center}
-.gate .btn{margin-top:10px}
-.gate .btn.wh{background:#fff;color:#0b2f57}
-.gate .btn.gh{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)}
-.gate .how{background:rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;margin-top:16px;font-size:14.5px;line-height:1.5}
-.gate .how b{color:#FFD24D}
-.gate .gnote{margin-top:12px;background:#FFD24D;color:#1b2430;border-radius:12px;padding:10px 12px;font-size:14.5px;line-height:1.45;text-align:center}
-.gate .gnote[hidden]{display:none}
-.gate .how.flash{animation:gfl 1s ease 3;outline:2px solid #FFD24D}
+#gate{position:fixed;inset:0;z-index:100;background:#0b2f57;color:#fff;overflow:auto;padding:calc(24px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+#gate[hidden],#gate [hidden]{display:none!important}
+#gate .gw{max-width:440px;margin:0 auto}
+#gate .gi{font-size:46px;text-align:center;margin:6px 0 4px}
+#gate h2{color:#fff;text-align:center;font-size:21px;margin:0 0 8px}
+#gate p{color:#d7e3f1;font-size:15px;line-height:1.5;margin:0 0 12px;text-align:center}
+#gate .btn{margin-top:10px}
+#gate .btn.wh{background:#fff;color:#0b2f57}
+#gate .btn.gh{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)}
+#gate .how{background:rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;margin-top:16px;font-size:14.5px;line-height:1.5}
+#gate .how b{color:#FFD24D}
+#gate .gnote{margin-top:12px;background:#FFD24D;color:#1b2430;border-radius:12px;padding:10px 12px;font-size:14.5px;line-height:1.45;text-align:center}
+#gate .gnote[hidden]{display:none}
+#gate .how.flash{animation:gfl 1s ease 3;outline:2px solid #FFD24D}
 @keyframes gfl{50%{background:rgba(255,210,77,.25)}}
-.gate .how ol{margin:6px 0 0;padding-left:20px}
-.gate .url{word-break:break-all;font-size:12.5px;color:#9fb6cf;text-align:center;margin-top:8px}
+#gate .how ol{margin:6px 0 0;padding-left:20px}
+#gate .url{word-break:break-all;font-size:12.5px;color:#9fb6cf;text-align:center;margin-top:8px}
 .duo{display:flex;gap:10px;margin-top:14px}
 .duo .btn{flex:1;margin-top:0;padding:13px 8px;font-size:15px;line-height:1.25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;text-decoration:none}
 .duo .btn small{font-weight:600;font-size:11.5px;opacity:.85}
@@ -577,7 +577,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 4 · TRANG PHỤC VÀ HÀNH VI -->
-<section class="slide" data-min="10">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">01 · Quy định chung</div><h2 class="rv">Trang phục và hành vi</h2></div><img class="pop" data-src="s2_1.webp" alt=""></div>
   <div class="body">
     <h3 class="rv">Trang phục bắt buộc</h3>
@@ -600,7 +600,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 5 · KIỂM TRA PHƯƠNG TIỆN -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">01 · Quy định chung</div><h2 class="rv">Kiểm tra phương tiện trước khi vận hành</h2></div><img class="pop" data-src="s2_1.webp" alt=""></div>
   <div class="body">
     <div class="hero rv"><img data-src="s5_1.webp" alt="Đầu kéo kéo container"></div>
@@ -626,7 +626,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 6 · XỬ LÝ VI PHẠM -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">01 · Quy định chung / Xử lý vi phạm</div><h2 class="rv">Mức xử lý vi phạm</h2></div><img class="pop" data-src="s2_1.webp" alt=""></div>
   <div class="body">
     <div class="warn pulse">Hút thuốc sai nơi quy định hoặc sử dụng chất kích thích: CẤM VĨNH VIỄN ngay lần đầu.</div>
@@ -668,7 +668,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 8 · ĐIỀU KIỆN RA VÀO -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">02 · Quy định ra vào cổng</div><h2 class="rv">Điều kiện đối với tài xế và phụ lái</h2></div><img class="pop" data-src="s2_2.webp" alt=""></div>
   <div class="body">
     <div class="cond rv"><span class="n">1</span><span>Giấy tờ cá nhân hợp lệ</span><img data-src="s8_2.webp" alt=""></div>
@@ -697,7 +697,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 10 · GIỜ CỔNG WN3 -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">03 · Quy định giờ hoạt động</div><h2 class="rv">Khung giờ hạn chế tại cổng WN3</h2></div><img class="pop" data-src="s2_4.webp" alt=""></div>
   <div class="body">
     <div class="gate rv"><div class="gh">Cổng 1</div><div class="gb">
@@ -715,7 +715,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 11 · ĐƯỜNG NỘI BỘ WN3 -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">03 · Quy định giờ hoạt động</div><h2 class="rv">Khung giờ hạn chế tại đường nội bộ WN3</h2></div><img class="pop" data-src="s2_4.webp" alt=""></div>
   <div class="body">
     <table class="tbl rv"><thead><tr><th>Buổi</th><th>Khung giờ ăn</th></tr></thead>
@@ -733,7 +733,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 12 · WN2 & WN5 -->
-<section class="slide" data-min="10">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">03 · Quy định giờ hoạt động</div><h2 class="rv">Khung giờ hạn chế tại WN2 và WN5</h2></div><img class="pop" data-src="s2_4.webp" alt=""></div>
   <div class="body">
     <div class="gate rv"><div class="gh">WN2 / Cổng 1</div><div class="gb">
@@ -765,7 +765,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 14 · QUY TẮC DI CHUYỂN -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">04 · Quy định di chuyển</div><h2 class="rv">Quy tắc di chuyển trong nhà máy</h2></div><img class="pop" data-src="s2_8.webp" alt=""></div>
   <div class="body">
     <div class="speed rv"><div class="sign pop" data-count="10">10</div><div><b>km/h tối đa</b><span>Tốc độ tối đa khi di chuyển trong nhà máy.</span></div></div>
@@ -779,7 +779,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 15 · RỜI VỊ TRÍ TẢI HÀNG -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">04 · Quy định di chuyển</div><h2 class="rv">Điều kiện rời vị trí tải hàng</h2></div><img class="pop" data-src="s2_8.webp" alt=""></div>
   <div class="body">
     <div class="flow">
@@ -808,7 +808,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 17 · VỊ TRÍ ĐỖ VÀ CHÊM BÁNH -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">05 · Quy định đỗ xe</div><h2 class="rv">Vị trí đỗ và chêm bánh</h2></div><img class="pop" data-src="s2_3.webp" alt=""></div>
   <div class="body">
     <div class="row ph rv"><img data-src="s17_1.webp" alt=""><div><span class="k">Đỗ đúng vị trí</span>Vạch vàng và không có biển cấm.</div></div>
@@ -834,7 +834,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 19 · SỬ DỤNG BÌNH CHỮA CHÁY -->
-<section class="slide" data-min="14">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">06 · Quy định PCCC</div><h2 class="rv">Sử dụng bình chữa cháy</h2></div><img class="pop" data-src="s2_5.webp" alt=""></div>
   <div class="body">
     <div class="hero rv" style="background:#fff"><img data-src="s19_1.webp" alt="Bình bột ABC và bình CO2" style="max-height:220px;object-fit:contain;margin:0 auto"></div>
@@ -874,7 +874,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 21 · KHI CÓ CHÁY / SƠ TÁN -->
-<section class="slide" data-min="12">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">07 · Ứng phó, xử lý sự cố</div><h2 class="rv">Khi phát hiện cháy hoặc có lệnh sơ tán</h2></div><img class="pop" data-src="s2_6.webp" alt=""></div>
   <div class="body">
     <div class="hero rv"><img data-src="s21_1.webp" alt="Nhấn chuông báo cháy và sơ tán theo lối thoát hiểm"></div>
@@ -898,7 +898,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 22 · ĐIỂM TẬP TRUNG -->
-<section class="slide" data-min="10">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">07 · Ứng phó, xử lý sự cố</div><h2 class="rv">Điểm tập trung</h2></div><img class="pop" data-src="s2_6.webp" alt=""></div>
   <div class="body">
     <div class="gal">
@@ -912,7 +912,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 23 · SỰ CỐ GIAO THÔNG VÀ TÀI SẢN -->
-<section class="slide" data-min="10">
+<section class="slide" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">07 · Ứng phó, xử lý sự cố</div><h2 class="rv">Xử lý sự cố giao thông và tài sản</h2></div><img class="pop" data-src="s2_6.webp" alt=""></div>
   <div class="body">
     <div class="row ph rv"><img data-src="s23_1.webp" alt=""><div><span class="k">01 · Giữ nguyên hiện trường</span>Không cho xe tiếp tục di chuyển.</div></div>
@@ -937,7 +937,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 25 · DC1 -->
-<section class="slide inc" data-min="10">
+<section class="slide inc" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">DC1: chân trụ sụt trên nắp cống</h2></div><img class="pop" data-src="s2_7.webp" alt=""></div>
   <div class="body">
     <div class="ph rv" style="background:#fff"><img data-src="s25_1.webp" alt="Vị trí chân trụ trên nắp cống"></div>
@@ -949,7 +949,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 26 · WN3 cổng 2 -->
-<section class="slide inc" data-min="10">
+<section class="slide inc" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">WN3: đuôi container va quẹt tại cổng 2</h2></div><img class="pop" data-src="s2_7.webp" alt=""></div>
   <div class="body">
     <div class="ph rv"><img data-src="s26_1.webp" alt="Camera ghi lại đuôi container va quẹt tại cổng"></div>
@@ -961,7 +961,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 27 · WN3 B2 -->
-<section class="slide inc" data-min="10">
+<section class="slide inc" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">WN3: container nghiêng khi tách đầu kéo</h2></div><img class="pop" data-src="s2_7.webp" alt=""></div>
   <div class="body">
     <div class="ph rv"><img data-src="s27_1.webp" alt="Container nghiêng sang phải"></div>
@@ -973,7 +973,7 @@ body.lock{overflow:hidden}
 </section>
 
 <!-- 28 · WN3 máng 407 -->
-<section class="slide inc" data-min="10">
+<section class="slide inc" data-min="15">
   <div class="head"><div class="t"><div class="eyebrow rv">08 · Tham khảo các sự cố</div><h2 class="rv">WN3: cửa container va vào cửa cuốn</h2></div><img class="pop" data-src="s2_7.webp" alt=""></div>
   <div class="body">
     <div class="ph rv"><img data-src="s28_1.webp" alt="Cửa cuốn bị sập"></div>
@@ -1955,7 +1955,7 @@ window.addEventListener("pageshow",e=>{if(e.persisted)qrFromHash()});
     <p style="color:#c9d3df;font-size:12.5px;text-align:center;margin:10px 0 0">Không lưu được? Chụp màn hình trang này cũng được.</p>
   </div>
 </div>
-<div class="gate" id="gate" hidden><div class="gw">
+<div class="brgate" id="gate" hidden><div class="gw">
   <div class="gi">🌐</div>
   <h2>Mở bằng <span class="gBr">trình duyệt</span> của điện thoại</h2>
   <p>Để thẻ chứng nhận luôn được lưu ở <b>một chỗ</b> và xem lại được mỗi lần vào cổng, trang đào tạo chỉ chạy trên <b class="gBr">trình duyệt</b> của điện thoại.</p>
