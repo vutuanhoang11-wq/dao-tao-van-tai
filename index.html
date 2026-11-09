@@ -1087,7 +1087,7 @@ body.lock{overflow:hidden}
   </div>
   <div id="cardFoot">
   <p class="hint">Xuất trình thẻ này cho bảo vệ tại cổng. Đồng hồ và dải sáng chuyển động giúp bảo vệ phân biệt thẻ thật với ảnh chụp màn hình.</p>
-  <p class="hint">Lần sau: quét mã QR thẻ bên dưới, hoặc quét mã QR đào tạo → "Xem thẻ chứng nhận của tôi" → nhập số CCCD.</p>
+  <p class="hint">Lần sau: quét ảnh mã QR thẻ đã lưu, hoặc quét mã QR đào tạo → "Xem thẻ chứng nhận của tôi" → nhập số CCCD.</p>
   <div class="keep" id="qrBox" hidden>
     <div class="kt">🔳 MÃ QR THẺ</div>
     <div class="kq" id="qrSvg"></div>
@@ -1722,7 +1722,7 @@ function lookupCard(){
   cert=c; renderCert(c); go("card");
 }
 function retrain(c){
-  [["name","f_name"],["cccd","f_cccd"],["dob","f_dob"],["unit","f_unit"],["pos","f_pos"],["phone","f_phone"]].forEach(([k,id])=>$(id).value=c[k]||"");
+  [["name","f_name"],["cccd","f_cccd"],["dob","f_dob"],["unit","f_unit"],["pos","f_pos"],["phone","f_phone"]].forEach(([k,id])=>$(id).value=k==="dob"?String(c.dob||"").slice(0,10):(c[k]||""));
   go("register");
 }
 
@@ -1792,25 +1792,31 @@ function slimJpeg(b64){try{const bin=atob(b64);let o="\xFF\xD8",i=2;
     if(!((m>=0xE0&&m<=0xEF)||m===0xFE))o+=bin.slice(i,i+2+len);
     i+=2+len}
   return b64}catch(e){return b64}}
+// Ảnh chân dung nhỏ gọn cho mã QR: cắt sát khuôn mặt, ưu tiên WebP (nét hơn nhiều ở cùng dung lượng), dự phòng JPEG
 function tinyPhoto(src,maxLen){return new Promise(res=>{if(!src)return res("");const im=new Image();im.onload=()=>{
+  const sw=im.width*0.8, sh=im.height*0.8, sx=im.width*0.1, sy=im.height*0.04;
+  const draw=(w,h)=>{const cv=document.createElement("canvas");cv.width=w;cv.height=h;const g=cv.getContext("2d");g.imageSmoothingEnabled=true;g.imageSmoothingQuality="high";g.drawImage(im,sx,sy,sw,sh,0,0,w,h);return cv};
+  for(const [w,h,q] of [[84,112,.45],[78,104,.4],[72,96,.35],[66,88,.3],[60,80,.3],[72,96,.15],[60,80,.15],[54,72,.15]]){
+    const u=draw(w,h).toDataURL("image/webp",q); if(!/^data:image\/webp;base64,/.test(u))break;
+    const b=u.slice(u.indexOf(",")+1); if(b.length<=maxLen)return res(b)}
   let best="";
-  for(const [w,h,q] of [[60,80,.5],[54,72,.45],[48,64,.4],[42,56,.35],[36,48,.35],[36,48,.2],[30,40,.2]]){const cv=document.createElement("canvas");cv.width=w;cv.height=h;cv.getContext("2d").drawImage(im,0,0,w,h);const u=cv.toDataURL("image/jpeg",q);if(!/^data:image\/jpeg;base64,/.test(u))continue;const b=slimJpeg(u.slice(23));if(b.length<=maxLen)return res(b);if(!best||b.length<best.length)best=b}
-  res(best.length<=maxLen+500?best:"")};im.onerror=()=>res("");im.src=src})}
+  for(const [w,h,q] of [[60,80,.5],[54,72,.45],[48,64,.4],[42,56,.35],[36,48,.35],[36,48,.2],[30,40,.2]]){const u=draw(w,h).toDataURL("image/jpeg",q);if(!/^data:image\/jpeg;base64,/.test(u))continue;const b=slimJpeg(u.slice(23));if(b.length<=maxLen)return res(b);if(!best||b.length<best.length)best=b}
+  res(best.length<=maxLen+400?best:"")};im.onerror=()=>res("");im.src=src})}
 async function keepPayload(c){
-  if(c._k3)return c._k3;
+  if(c._k4)return c._k4;
   const base=[3,c.name,c.cccd,t36(c.dob),c.unit,c.pos,c.score,c.code,t36(c.issued),t36(c.expiry)];
   // ảnh để riêng (base64url) – không mã hoá 2 lần → mã QR thưa hơn, dễ quét hơn
   const ph=(await tinyPhoto(c.photo||c.photoThumb,1500)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
   const body=JSON.stringify(base);
   const p=b64u(body)+"."+ph+"."+h53(body+ph+KEEP_SALT,7);
-  c._k3=p; return p;
+  c._k4=p; return p;
 }
 const KEEP_BASE="https://vutuanhoang11-wq.github.io/dao-tao-van-tai/";
 function keepUrl(p){return KEEP_BASE+"#the="+p}
 function readKeep(p){
   try{const [b,ph,s]=p.split(".");if(s===undefined)return null;const body=ub64u(b);if(h53(body+ph+KEEP_SALT,7)!==s)return null;
     const a=JSON.parse(body);if(a[0]!==3)return null;
-    return {name:a[1],cccd:a[2],dob:f36(a[3]),unit:a[4],pos:a[5],score:a[6],code:a[7],issued:f36(a[8]),expiry:f36(a[9]),photo:ph?"data:image/jpeg;base64,"+ph.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((ph.length+3)%4):"",sign:"",sent:true,verify:true}
+    return {name:a[1],cccd:a[2],dob:f36(a[3]),unit:a[4],pos:a[5],score:a[6],code:a[7],issued:f36(a[8]),expiry:f36(a[9]),photo:ph?"data:image/"+(/^UklG/.test(ph)?"webp":"jpeg")+";base64,"+ph.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((ph.length+3)%4):"",sign:"",sent:true,verify:true}
   }catch(e){return null}
 }
 function wrapText(g,t,x,y,maxW,lh){const w=t.split(" ");let line="";for(const k of w){const tt=line?line+" "+k:k;if(g.measureText(tt).width>maxW&&line){g.fillText(line,x,y);y+=lh;line=k}else line=tt}if(line)g.fillText(line,x,y);return y+lh}
@@ -1861,9 +1867,7 @@ async function saveKeepImg(){
 }
 function saveAgain(){const how=doSaveKeep(); $("keepOvlTip").innerHTML=!how?"Ứng dụng này không cho lưu ảnh. Hãy <b>chụp màn hình</b> trang này.":how==="share"?TIP_SHARE:"Ảnh đang được tải về máy."}
 function renderKeep(c){
-  const show=!c.verify&&Date.now()<new Date(c.expiry).getTime();
-  $("qrBox").hidden=!show;
-  if(show&&keepFor!==c){$("qrSvg").innerHTML=""; prepKeep(c)}
+  $("qrBox").hidden=true; // mã QR thẻ chỉ hiện ở trang ngay sau khi ký cam kết
   $("verifyBar").hidden=!c.verify; $("cardFoot").hidden=!!c.verify;
   if(c.verify) $("verifyTime").textContent=new Date().toLocaleString("vi-VN",{hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit",year:"numeric"});
 }
