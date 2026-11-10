@@ -712,9 +712,9 @@ body.lock{overflow:hidden}
   <div class="head"><div class="t"><div class="eyebrow rv">03 · Quy định giờ hoạt động</div><h2 class="rv">Khung giờ hạn chế tại cổng WN3</h2></div><img class="pop" data-src="s2_4.webp" alt=""></div>
   <div class="body">
     <div class="gate rv"><div class="gh">Cổng 1</div><div class="gb">
-      <span>Sáng</span><b>06:00–07:00</b>
+      <span>Sáng</span><b>04:15–07:00</b>
       <span>Chiều</span><b>15:45–16:15 · 17:30–18:00</b>
-      <span>Tối / đêm</span><b>19:30–20:15 · 04:15–06:00</b></div></div>
+      <span>Tối / đêm</span><b>19:30–20:15</b></div></div>
     <div class="gate rv"><div class="gh">Cổng 2</div><div class="gb">
       <span>Sáng</span><b>06:00–07:30</b>
       <span>Chiều</span><b>15:45–16:15 · 17:30–18:00</b>
@@ -1194,7 +1194,7 @@ const QUIZ_BANK = [
   {id:7,g:3,q:"Đường nội bộ WN3 hạn chế phương tiện lưu thông vào các khung giờ nào?",
    o:["10:45–11:30, 17:00–17:40, 22:50–00:10","06:00–07:00, 19:30–20:15","06:00–07:30, 17:30–18:15, 19:15–20:15","12:00–13:00, 18:00–19:00"],a:0},
   {id:8,g:3,q:"Cổng 1 nhà máy WN3 hạn chế xe ra vào trong các khung giờ nào?",
-   o:["06:00–07:00, 15:45–16:15, 17:30–18:00, 19:30–20:15, 04:15–06:00","06:00–07:30, 15:45–16:15, 17:30–18:00, 19:15–20:15","10:45–11:30, 17:00–17:40, 22:50–00:10","Chỉ 06:00–07:00"],a:0},
+   o:["04:15–07:00, 15:45–16:15, 17:30–18:00, 19:30–20:15","06:00–07:30, 15:45–16:15, 17:30–18:00, 19:15–20:15","10:45–11:30, 17:00–17:40, 22:50–00:10","Chỉ 06:00–07:00"],a:0},
   {id:23,g:3,q:"Trong khung giờ hạn chế tại các cổng WN3, điều gì KHÔNG được phép?",
    o:["Ra vào cổng và di chuyển xe trên đường nội bộ từ Cổng 1 – 3","Chỉ cấm xe ra khỏi cổng, xe vào vẫn được","Chỉ cấm xe máy của nhân viên qua cổng","Chỉ hạn chế ở Cổng 3, các cổng khác bình thường"],a:0},
   {id:26,g:3,alt:23,q:"Trong khung giờ hạn chế, điều gì KHÔNG được phép?",
@@ -1230,7 +1230,28 @@ const QUIZ_BANK = [
   {id:21,g:7,q:"Khi nghe chuông báo cháy hoặc lệnh sơ tán, tài xế và phụ lái phải làm gì?",
    o:["Lái xe chạy ra cổng gần nhất để thoát nhanh","Ở lại trong cabin, chờ bảo vệ hướng dẫn","Theo lối thoát hiểm đến điểm tập kết nhà thầu và điểm danh","Tập trung tại cổng bảo vệ gần nhất để điểm danh"],a:2},
   {id:22,g:7,q:"Trong quá trình lái xe trong nhà máy, nếu gây ra sự cố bạn sẽ làm gì?",
-   o:["Lập biên bản với người liên quan rồi tiếp tục di chuyển","Tự xử lý theo đánh giá của bản thân rồi báo sau","Di chuyển xe sang chỗ khác cho thông đường","Giữ nguyên hiện trường và thông báo Logistics, EHS, Bảo vệ"],a:3}
+   o:["Lập biên bản với người liên quan rồi tiếp tục di chuyển","Tự xử lý theo đánh giá của bản thân rồi báo sau","Di chuyển xe sang chỗ khác cho thông đường","Giữ nguyên hiện trường và thông báo Logistics, EHS, Bảo vệ"],a:3},
+  // ---- Câu tình huống (bổ sung 10/11/2026) – alt: câu cùng ý, không ra chung đề ----
+  {id:27,g:1,q:"Tài xế A từng bị cấm 15 ngày vì chạy quá tốc độ. Lần này A lùi xe làm hư hỏng cửa cuốn. A bị xử lý thế nào?",
+   o:["Nhắc nhở","Cấm 15 ngày","Cấm 30 ngày","Cấm vĩnh viễn"],a:2},
+  {id:28,g:2,alt:12,q:"Thẻ chứng nhận được cấp ngày 10/01/2026. Đến ngày 20/06/2026, thẻ hiện màu gì và cần làm gì?",
+   o:["Xanh, chưa cần làm gì","Cam, cần đào tạo lại trước ngày 10/07/2026","Đỏ, không được vào cổng","Cam, vẫn được vào cổng thêm 1 tháng sau ngày hết hạn"],a:1},
+  {id:29,g:3,alt:8,q:"Xe container đến Cổng 1 WN3 lúc 05:30. Sớm nhất mấy giờ xe được qua cổng?",
+   o:["05:30, đi ngay","06:00","07:00","07:30"],a:2},
+  {id:30,g:3,alt:7,q:"Lúc 11:00, xe cần di chuyển từ B4 sang B2 trên đường nội bộ WN3. Tài xế nên làm gì?",
+   o:["Đi ngay với tốc độ 10 km/h","Đi ngay nếu có phụ lái dẫn đường","Chờ đến sau 11:30 mới di chuyển","Chờ đến 13:00"],a:2},
+  {id:31,g:5,alt:17,q:"Cần tách đầu kéo, có 4 vị trí để hạ chân trụ. Vị trí nào an toàn?",
+   o:["Trên nắp cống bê tông dày, trông rất chắc chắn","Nền đất đã được đầm chặt, bằng phẳng","Sát mép hố ga, có kê thêm tấm gỗ","Đúng vị trí tấm thép trên nền bê tông cứng, bằng phẳng"],a:3},
+  {id:32,g:4,alt:13,q:"Phụ lái ra hiệu cho xe chạy, nhưng tài xế thấy chân trụ chưa thu hết. Tài xế phải làm gì?",
+   o:["Chạy chậm, vừa đi vừa thu chân trụ","Chạy theo hiệu lệnh của phụ lái vì phụ lái chịu trách nhiệm","Dừng hẳn xe, thu chân trụ hoàn toàn rồi mới chạy","Chạy đến cổng rồi thu chân trụ"],a:2},
+  {id:33,g:1,alt:3,q:"Phụ lái nghỉ đột xuất, tài xế muốn tự lái một mình vào lấy container. Điều nào đúng?",
+   o:["Được, nếu chạy dưới 10 km/h","Được, nếu nhờ bảo vệ dẫn đường","Không được – không có phụ lái thì không được hoạt động, đây là lỗi nặng","Được, nếu chỉ di chuyển ngoài khung giờ hạn chế"],a:2},
+  {id:34,g:4,alt:10,q:"Xe chuẩn bị rẽ qua cổng hẹp, gần đó có xe máy đỗ và bảo vệ đang đứng. Cách làm nào đúng?",
+   o:["Tăng tốc để qua nhanh, giảm thời gian chiếm cổng","Phụ lái đứng sau đuôi xe, nơi tài xế không nhìn thấy, để quan sát giúp","Giảm tốc, bật đèn/còi/xi nhan; phụ lái điều phối ở vị trí tài xế nhìn thấy được","Chỉ cần bấm còi liên tục rồi đi qua"],a:2},
+  {id:35,g:4,q:"Tài xế phát hiện vừa kéo nhầm container và cần lùi lại vào máng. Việc nào phải làm trước khi lùi?",
+   o:["Lùi ngay về vị trí cũ cho nhanh","Kiểm tra cửa container đã đóng chắc và cửa máng (cửa cuốn) an toàn; phụ lái hướng dẫn","Mở cửa container để kiểm tra hàng rồi lùi","Chỉ cần quan sát gương chiếu hậu"],a:1},
+  {id:36,g:6,alt:19,q:"Có đám cháy nhỏ, gió đang thổi. Đứng ở đâu để phun bình chữa cháy?",
+   o:["Cách 0,5 m để phun trúng hơn","Cách khoảng 3 m, gió thổi từ đám cháy về phía mình","Cách khoảng 3 m, gió thổi từ sau lưng mình về phía đám cháy","Cách 8 m cho an toàn tuyệt đối"],a:2},
 ];
 
 /* BẢN CAM KẾT — theo biểu mẫu EHS-S-23-001_F02V02 */
