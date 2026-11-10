@@ -57,6 +57,9 @@ input.err{border-color:var(--bad)}
 #scanCover[hidden]{display:none!important}
 .nextstep{margin-top:12px;background:#FFF4D6;border:2px solid var(--warn);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;color:#3a2a00;text-align:center}
 .nextstep b:first-child{color:#B45309}
+.nextstep.blink{animation:nsBlink 1.2s ease-in-out infinite}
+@keyframes nsBlink{0%,100%{background:#FFF4D6;border-color:#F59E0B;box-shadow:0 0 0 0 rgba(245,158,11,.0)}50%{background:#FFE08A;border-color:#D97706;box-shadow:0 0 0 6px rgba(245,158,11,.25)}}
+@media (prefers-reduced-motion:reduce){.nextstep.blink{animation:none}}
 .keep .btn{margin-top:12px}
 .verify{background:#E7F6EC;border:2px solid var(--ok);border-radius:14px;padding:12px 14px;margin:14px 0 0}
 .verify[hidden],#cardFoot[hidden],.ovl[hidden]{display:none}
@@ -492,7 +495,7 @@ body.lock{overflow:hidden}
       <li>Nhận <b>thẻ chứng nhận</b>, xuất trình cho bảo vệ khi vào cổng</li>
     </ul>
     <p class="mut" style="margin-top:8px">Thời gian khoảng 15–20 phút. Thẻ có hiệu lực <b id="wValid"></b> tháng.</p>
-    <p style="text-align:center;font-size:11px;color:#9aa1ab;margin:10px 0 0">Phiên bản 10/11/2026 · 36 câu hỏi</p>
+    <p style="text-align:center;font-size:11px;color:#9aa1ab;margin:10px 0 0">Phiên bản 10/11/2026 (2) · 36 câu hỏi</p>
     <button class="btn" onclick="go('register')">Bắt đầu</button>
     <button class="btn sec" id="btnMyCard" onclick="go('lookup')">Xem thẻ chứng nhận của tôi</button>
   </div>
@@ -1076,12 +1079,12 @@ body.lock{overflow:hidden}
 <!-- 7. Mã QR thẻ (ngay sau ký cam kết) -->
 <section class="screen" id="s-qr">
   <div class="card" style="text-align:center">
-    <h2 style="margin-bottom:4px">🎉 Hoàn thành đào tạo</h2>
-    <p class="mut" style="font-size:14.5px;margin:0">Đây là <b>mã QR thẻ</b> của anh/chị. Lưu ảnh mã về máy để mở lại thẻ và đưa <b>bảo vệ quét</b> tại cổng.</p>
+    <h2 style="margin-bottom:8px">🎉 Hoàn thành đào tạo</h2>
+    <div class="nextstep blink" style="margin-top:0"><b>⚠ CHƯA XONG – ĐỪNG THOÁT RA</b><br>Lưu ảnh xong, trang tự chuyển sang bước cuối: <b>Gửi kết quả cho EHS</b>. Chưa gửi kết quả thì <b>chưa có tên</b> trong danh sách vào cổng.</div>
     <div class="kq" id="qrSvg2" style="width:min(320px,84vw);margin:14px auto 6px"></div>
     <div style="font-size:13px;font-weight:600;color:#333" id="qrName2"></div>
     <button class="btn" id="btnQrSave" onclick="qrStepSave()" style="font-size:17px">⬇ Lưu ảnh</button>
-    <div class="nextstep"><b>⚠ CHƯA XONG – ĐỪNG THOÁT RA</b><br>Lưu ảnh xong, trang tự chuyển sang bước cuối: <b>Gửi kết quả cho EHS</b>. Chưa gửi kết quả thì <b>chưa có tên</b> trong danh sách vào cổng.</div>
+    <p class="mut" style="font-size:14px;margin:10px 0 0">Đây là <b>mã QR thẻ</b> của anh/chị. Lưu ảnh mã về máy để mở lại thẻ và đưa <b>bảo vệ quét</b> tại cổng.</p>
     <p class="mut" id="qrStepTip" hidden style="font-size:13.5px;margin-top:10px">Ứng dụng không cho tự lưu ảnh. Hãy <b>chụp màn hình</b> mã QR này, rồi bấm <a href="#" onclick="qrSaved();return false"><b>Tiếp tục</b></a>.</p>
   </div>
 </section>
@@ -1239,7 +1242,7 @@ const QUIZ_BANK = [
    o:["Xanh, chưa cần làm gì","Cam, cần đào tạo lại trước ngày 10/07/2026","Đỏ, không được vào cổng","Cam, vẫn được vào cổng thêm 1 tháng sau ngày hết hạn"],a:1},
   {id:29,g:3,alt:8,q:"Xe container đến Cổng 1 WN3 lúc 05:30. Sớm nhất mấy giờ xe được qua cổng?",
    o:["05:30, đi ngay","06:00","07:00","07:30"],a:2},
-  {id:30,g:3,alt:7,q:"Lúc 11:00, xe cần di chuyển từ B4 sang B2 trên đường nội bộ WN3. Tài xế nên làm gì?",
+  {id:30,g:3,alt:7,q:"Lúc 11:00, xe cần di chuyển từ cổng bảo vệ số 2 đi thẳng xuống cuối đường nội bộ giữa Xưởng B1 và B2. Đơn vị vận tải cần làm gì?",
    o:["Đi ngay với tốc độ 10 km/h","Đi ngay nếu có phụ lái dẫn đường","Chờ đến sau 11:30 mới di chuyển","Chờ đến 13:00"],a:2},
   {id:31,g:5,alt:17,q:"Cần tách đầu kéo, có 4 vị trí để hạ chân trụ. Vị trí nào an toàn?",
    o:["Trên nắp cống bê tông dày, trông rất chắc chắn","Nền đất đã được đầm chặt, bằng phẳng","Sát mép hố ga, có kê thêm tấm gỗ","Đúng vị trí tấm thép trên nền bê tông cứng, bằng phẳng"],a:3},
