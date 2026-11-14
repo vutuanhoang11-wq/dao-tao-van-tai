@@ -495,7 +495,7 @@ body.lock{overflow:hidden}
       <li>Nhận <b>thẻ chứng nhận</b>, xuất trình cho bảo vệ khi vào cổng</li>
     </ul>
     <p class="mut" style="margin-top:8px">Thời gian khoảng 15–20 phút. Thẻ có hiệu lực <b id="wValid"></b> tháng.</p>
-    <p style="text-align:center;font-size:11px;color:#9aa1ab;margin:10px 0 0">Phiên bản 10/11/2026 (2) · 36 câu hỏi</p>
+    <p style="text-align:center;font-size:11px;color:#9aa1ab;margin:10px 0 0">Phiên bản 14/11/2026 (2) · 36 câu hỏi</p>
     <button class="btn" onclick="go('register')">Bắt đầu</button>
     <button class="btn sec" id="btnMyCard" onclick="go('lookup')">Xem thẻ chứng nhận của tôi</button>
   </div>
@@ -1095,7 +1095,8 @@ body.lock{overflow:hidden}
     <h2 style="margin-bottom:4px">Bước cuối: gửi kết quả cho EHS</h2>
     <ol class="sendsteps"><li>Bấm nút <b>Gửi kết quả cho EHS</b> bên dưới.</li><li>Trên trang biểu mẫu, <b>kéo xuống cuối và bấm "Gửi" (Submit)</b> – thông tin đã điền sẵn, không sửa ô nào.</li><li>Gửi xong, bấm link <b>"Xem lại thẻ"</b> trên trang cảm ơn (hoặc đóng trang biểu mẫu) để về thẻ.</li></ol>
     <a class="btn" id="formsLink2" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none" onclick="return openForms2()">Gửi kết quả cho EHS</a>
-    <p class="mut" id="sendAgain" hidden style="margin-top:10px;font-size:13.5px">Đã mở biểu mẫu. Chưa bấm "Gửi" được thì bấm nút trên để gửi lại – gửi 2 lần không sao.</p>
+    <div id="resendBox" hidden style="margin-top:10px;background:#FFF4D6;border:1.5px solid #F59E0B;border-radius:10px;padding:10px;font-size:13.5px">Mã thẻ này <b>đã mở biểu mẫu</b>. Nếu lần trước đã bấm <b>Submit</b> thì <b>KHÔNG gửi lại</b>.<br><label style="display:flex;gap:6px;margin-top:6px;align-items:flex-start"><input type="checkbox" id="resendChk" onchange="resendOK=this.checked"> Lần trước tôi <b>chưa bấm Submit được</b>, cần gửi lại (chỉ 1 lần).</label></div>
+    <p class="mut" id="sendAgain" hidden style="margin-top:10px;font-size:13.5px">Chỉ cần bấm "Gửi" (Submit) <b>một lần</b>. Hệ thống chỉ ghi nhận 1 kết quả cho mỗi người, gửi lại cũng không tạo thêm kết quả.</p>
   </div>
   <div id="certBox"></div>
   <div class="verify" id="verifyBar" hidden>
@@ -1352,6 +1353,12 @@ function submitRegister(){
   $("e_consent").textContent=err.consent||"";
   if(Object.keys(err).length){toast("Vui lòng kiểm tra lại thông tin");return}
   f.name=f.name.replace(/\s+/g," ").toUpperCase(); f.unit=f.unit.replace(/\s+/g," ").toUpperCase();
+  // Đã có thẻ CÒN HẠN (trên 1 tháng) cho CCCD này trên máy → không cho học/gửi lại, mở thẻ đang có
+  const dup=findValidDup(f.cccd,f.name);
+  if(dup){
+    toast((dup.cccd===f.cccd?"Số CCCD":"Họ tên")+" này đã có thẻ còn hạn đến "+fmtDate(new Date(dup.expiry))+". Chưa cần học lại.");
+    cert=dup; renderCert(dup); go("card"); return;
+  }
   f.photo=photo.card; f.photoThumb=photo.thumb;
   user=f; go("slides");
 }
@@ -1767,13 +1774,28 @@ function submitAll(){
   if(!saveCert(cert)) toast("Không lưu được thẻ trên điện thoại (bộ nhớ trình duyệt bị chặn)");
   showQrStep(cert);
 }
+/* ---- Chống gửi trùng trên điện thoại: trùng tên / CCCD / mã thẻ ---- */
+const norm=t=>String(t||"").replace(/\s+/g," ").trim().toUpperCase();
+function validLong(c){const s=new Date(c.expiry);s.setMonth(s.getMonth()-CONFIG.warnMonths);return Date.now()<s.getTime()}
+function findValidDup(cccd,name){return Object.values(loadCerts()).find(c=>(c.cccd===cccd||norm(c.name)===norm(name))&&validLong(c))||null}
+function sentLog(){try{return JSON.parse(localStorage.getItem("vt_sentlog")||"[]")}catch(e){return []}}
+function logSend(c){const L=sentLog();L.push({cccd:c.cccd,name:norm(c.name),code:c.code,at:Date.now()});try{localStorage.setItem("vt_sentlog",JSON.stringify(L.slice(-50)))}catch(e){}}
+function sendCount(c){return sentLog().filter(x=>x.code===c.code).length}
+function priorSentOther(c){ // đã gửi kết quả cho người trùng tên/CCCD bằng mã thẻ khác, thẻ đó còn hạn
+  return sentLog().find(x=>x.code!==c.code&&(x.cccd===c.cccd||x.name===norm(c.name))&&Object.values(loadCerts()).some(k=>k.code===x.code&&validLong(k)))}
 function openForms2(){
   if(!CONFIG.forms.baseUrl){toast("Chưa cấu hình link Forms (chế độ chạy thử)");return false}
   if(cert&&!cert.qrSaved){toast("Hãy lưu ảnh mã QR thẻ trước khi gửi kết quả");showQrStep(cert);return false}
+  if(cert&&cert.sent){toast("Kết quả của mã thẻ "+cert.code+" đã được ghi nhận – không gửi lại.");return false}
+  if(cert&&priorSentOther(cert)){toast("Họ tên / CCCD này đã gửi kết quả với thẻ còn hạn – không gửi lại.");return false}
+  const n=cert?sendCount(cert):0;
+  if(n>=2){toast("Mã thẻ "+cert.code+" đã mở biểu mẫu 2 lần. Nếu vẫn chưa gửi được, liên hệ EHS.");return false}
+  if(n===1&&!resendOK){$("resendBox").hidden=false;toast("Mã thẻ này đã mở biểu mẫu. Chỉ gửi lại nếu lần trước CHƯA bấm Submit.");return false}
+  resendOK=false; if(cert) logSend(cert);
   formsOpened=true; if(cert&&!cert.opened){cert.opened=true;saveCert(cert)}
-  $("sendAgain").hidden=false; return true;
+  $("sendAgain").hidden=false; $("formsLink2").textContent="Đã mở biểu mẫu – bấm lại nếu chưa Submit được"; $("formsLink2").classList.add("sec"); return true;
 }
-let formsOpened=false;
+let formsOpened=false, resendOK=false;
 function formsUrl(){
   const F=CONFIG.forms.fields, c=cert;
   const vals={name:c.name,cccd:c.cccd,dob:fmtDate(new Date(c.dob)),unit:c.unit,pos:c.pos,phone:c.phone,score:c.score,code:c.code,issued:fmtDate(new Date(c.issued)),expiry:fmtDate(new Date(c.expiry)),sign:c.sign,photo:c.photoThumb};
@@ -1820,6 +1842,8 @@ let clockT=null;
 function renderCert(c){
   const unsentBox=c.sent===false&&(Date.now()-new Date(c.issued).getTime())<7*86400000;
   $("sendBox").hidden=!unsentBox; $("sendAgain").hidden=!c.opened;
+  $("formsLink2").textContent=c.opened?"Đã mở biểu mẫu – bấm lại nếu chưa Submit được":"Gửi kết quả cho EHS"; $("formsLink2").classList.toggle("sec",!!c.opened);
+  $("resendBox").hidden=true; if($("resendChk"))$("resendChk").checked=false; resendOK=false;
   if(unsentBox&&CONFIG.forms.baseUrl){const keep=cert;cert=c;$("formsLink2").href=formsUrl();cert=keep}
   // Khung gửi kết quả hiện trong 7 ngày đầu kể từ ngày cấp thẻ (học online)
   const unsent=c.sent===false&&(Date.now()-new Date(c.issued).getTime())<7*86400000;
